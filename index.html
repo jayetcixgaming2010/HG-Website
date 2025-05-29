@@ -70,40 +70,40 @@
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
-    <div class="container mx-auto p-6 max-w-6xl relative z-10">
+    <div class="container mx-auto p-6 max-w-7xl relative z-10">
         <!-- Navigation -->
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center gap-3">
-                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
                 <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
             </div>
-            <div id="navMenu" class="nav-menu flex space-x-10 fade-in">
+            <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
                 <!-- Menu sẽ được cập nhật động bằng JavaScript -->
             </div>
             <button class="sm:hidden text-blue-100 text-xl" onclick="toggleMenu()">☰</button>
         </nav>
 
-        <!-- Hero Section -->
-        <section class="text-center mb-12 fade-in">
-            <h1 class="text-4xl md:text-5xl font-bold text-blue-100 drop-shadow-md mb-4">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
-            <p class="text-xl text-blue-200 mb-6">Chào mừng bạn đến với trang web Hack Game đỉnh cao!</p>
-            <a href="#features" class="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-300 shadow-md">Khám phá ngay</a>
-        </section>
+        <!-- Welcome Section -->
+        <div class="text-center mt-20 fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-100 mb-4">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
+            <p class="text-xl text-blue-200 mb-6">Chào mừng bạn đến với web Hack Game đỉnh cao!</p>
+            <a href="#explore" class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-300 shadow-md">Khám phá ngay</a>
+        </div>
 
         <!-- Features Section -->
-        <div id="features" class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            <a href="script-hack.html" class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md feature-card">
-                <h3 class="text-xl font-semibold mb-2 text-blue-200">Script Hack</h3>
-                <p class="text-blue-100">Script siêu xịn supports game Roblox.</p>
-            </a>
-            <a href="client-hack.html" class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md feature-card">
-                <h3 class="text-xl font-semibold mb-2 text-blue-200">Client Hack</h3>
-                <p class="text-blue-100">Client Hack siêu xịn chống ban wave.</p>
-            </a>
-            <a href="bot-discord.html" class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md feature-card">
-                <h3 class="text-xl font-semibold mb-2 text-blue-200">Bot Discord</h3>
-                <p class="text-blue-100">Bot Discord xịn xò hỗ trợ quản lý server.</p>
-            </a>
+        <div id="explore" class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <div class="bg-white bg-opacity-10 p-6 rounded-xl backdrop-blur-md shadow-lg text-center fade-in">
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Script Hack</h3>
+                <p class="text-blue-200">Script siêu xịn supports game Roblox.</p>
+            </div>
+            <div class="bg-white bg-opacity-10 p-6 rounded-xl backdrop-blur-md shadow-lg text-center fade-in">
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Client Hack</h3>
+                <p class="text-blue-200">Client Hack siêu xịn chống ban wave.</p>
+            </div>
+            <div class="bg-white bg-opacity-10 p-6 rounded-xl backdrop-blur-md shadow-lg text-center fade-in">
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Bot Discord</h3>
+                <p class="text-blue-200">Bot Discord xịn hỗ trợ quản lý server.</p>
+            </div>
         </div>
     </div>
 
@@ -129,14 +129,14 @@
         function updateNav() {
             const navMenu = document.getElementById('navMenu');
             const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            if (loggedInUser) {
+            if (loggedInUser && loggedInUser.displayName) {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Home</a>
-                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Script Hack</a>
-                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Client Hack</a>
-                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Bot Discord</a>
-                    <a href="#" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">${loggedInUser.email}</a>
-                    <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Sign Out</button>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="#" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
+                    <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
@@ -145,12 +145,12 @@
                 });
             } else {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Home</a>
-                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Script Hack</a>
-                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Client Hack</a>
-                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Bot Discord</a>
-                    <a href="signin.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Sign In</a>
-                    <a href="signup.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Sign Up</a>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="signin.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
+                    <a href="signup.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
             }
         }
