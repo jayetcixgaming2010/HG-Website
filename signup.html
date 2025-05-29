@@ -91,7 +91,7 @@
         <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
         <div class="mt-2 space-x-4">
             <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
-            <a href="https-practice 8000/your-github" class="text-blue-600 hover:text-blue-900 transition duration-300">GitHub</a>
+            <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
         </div>
     </footer>
 
@@ -133,22 +133,33 @@
         }
 
         // Sign up functionality
-        const signUpButton = document.getElementById('signUpButton').getElementById('signUpButton');
+        const signUpButton = document.getElementById('signUpButton');
         signUpButton.addEventListener('click', () => {
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             const confirmPassword = document.getElementById('confirmPassword').value.trim();
-            if (email && password && confirmPassword) {
-                if (password === confirmPassword) {
-                    localStorage.setItem('user', JSON.stringify({ email, password }));
-                    alert("Sign up successful! Redirecting to Sign In page...");
-                    window.location.href = 'signin.html';
-                } else {
-                    alert("Passwords do not match!");
-                }
-            } else {
+
+            if (!email || !password || !confirmPassword) {
                 alert("Please fill in all fields!");
+                return;
             }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            // Check if email already exists
+            const existingUser = JSON.parse(localStorage.getItem('user'));
+            if (existingUser && existingUser.email === email) {
+                alert("This email is already registered! Please use a different email.");
+                return;
+            }
+
+            // Save new user
+            localStorage.setItem('user', JSON.stringify({ email, password }));
+            alert("Sign up successful! Redirecting to Sign In page...");
+            window.location.href = 'signin.html';
         });
 
         // Initialize page
