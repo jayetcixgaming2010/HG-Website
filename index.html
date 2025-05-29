@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         .bg-animated {
-            background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
             background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
+            animation: gradientAnimation 12s ease infinite;
         }
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
@@ -18,45 +18,84 @@
             100% { background-position: 0% 50%; }
         }
         .bg-blur {
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
+        }
+        .feature-card {
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .feature-card:hover {
             background-color: rgba(255, 255, 255, 0.2) !important;
-            transition: background-color 0.3s ease;
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .nav-shadow {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .glow:hover {
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+        }
+        .particle {
+            animation: particleMove 20s ease-in-out infinite;
+        }
+        @keyframes particleMove {
+            0% { transform: translateY(0); opacity: 0.2; }
+            50% { transform: translateY(-20px); opacity: 0.4; }
+            100% { transform: translateY(0); opacity: 0.2; }
+        }
+        @media (max-width: 640px) {
+            .nav-menu {
+                display: none;
+            }
+            .nav-menu.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 80px;
+                right: 20px;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(8px);
+                border-radius: 8px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
-    <div class="container mx-auto p-6 max-w-5xl relative z-10">
+    <div class="container mx-auto p-6 max-w-6xl relative z-10">
         <!-- Navigation -->
-        <nav class="flex justify-between items-center mb-10">
+        <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-10 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center space-x-4">
-                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-24 transition-transform hover:scale-105">
-                <span class="text-white text-xl font-semibold">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
+                <span class="text-white text-2xl font-bold nav-shadow transition-all hover:text-blue-200 duration-300 glow">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
+            <div class="nav-menu flex space-x-6">
+                <a href="paste.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-full transition duration-300">Paste</a>
+                <a href="#features" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-full transition duration-300">Features</a>
+            </div>
+            <button class="sm:hidden text-white text-2xl" onclick="toggleMenu()">☰</button>
         </nav>
 
         <!-- Hero Section -->
         <div class="text-center">
-            <h1 class="text-5xl font-bold mb-6 drop-shadow-2xl animate-fade-in">Welcome to [ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
-            <p class="text-2xl mb-8 font-medium text-blue-100 drop-shadow-lg animate-fade-in-delay">The ultimate platform to share, collaborate, and manage your code snippets effortlessly.</p>
+            <h1 class="text-6xl font-extrabold mb-6 drop-shadow-2xl animate-fade-in">Welcome to [ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
+            <p class="text-3xl mb-8 font-medium text-blue-100 drop-shadow-lg animate-fade-in-delay">The ultimate platform to share, collaborate, and manage your code snippets effortlessly.</p>
             <div class="space-x-6">
-                <a href="paste.html" class="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold text-xl hover:bg-blue-100 hover:text-blue-800 transition duration-300 shadow-xl animate-pulse-slow">Get Started</a>
-                <a href="#features" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-xl hover:bg-white hover:text-blue-600 transition duration-300 shadow-md">Learn More</a>
+                <a href="paste.html" class="bg-white text-blue-600 px-10 py-5 rounded-full font-semibold text-xl hover:bg-blue-100 hover:text-blue-800 transition duration-300 shadow-xl animate-pulse-slow">Get Started</a>
+                <a href="#features" class="bg-transparent border-2 border-white text-white px-10 py-5 rounded-full font-semibold text-xl hover:bg-white hover:text-blue-600 transition duration-300 shadow-md">Learn More</a>
             </div>
         </div>
 
         <!-- Features Section -->
         <div id="features" class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md hover:bg-opacity-20 transition feature-card">
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md feature-card">
                 <h3 class="text-2xl font-semibold mb-2 text-blue-200">Script Hack</h3>
                 <p class="text-blue-100">Script siêu xịn supports game Roblox.</p>
             </div>
-            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md hover:bg-opacity-20 transition feature-card">
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md feature-card">
                 <h3 class="text-2xl font-semibold mb-2 text-blue-200">Client Hack</h3>
                 <p class="text-blue-100">Client Hack siêu xịn chống ban wave.</p>
             </div>
-            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md hover:bg-opacity-20 transition feature-card">
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md feature-card">
                 <h3 class="text-2xl font-semibold mb-2 text-blue-200">Bot Discord</h3>
                 <p class="text-blue-100">Bot Discord xịn xò hỗ trợ quản lý server.</p>
             </div>
@@ -64,15 +103,20 @@
     </div>
 
     <!-- Footer -->
-    <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-4 text-center mt-auto">
+    <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
         <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
+        <div class="mt-2 space-x-4">
+            <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
+            <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
+        </div>
     </footer>
 
     <!-- Background Particles (CSS Animation) -->
     <div class="absolute inset-0 z-0">
-        <div class="absolute w-4 h-4 bg-white rounded-full opacity-20 animate-pulse" style="top: 10%; left: 15%;"></div>
-        <div class="absolute w-6 h-6 bg-blue-200 rounded-full opacity-30 animate-pulse" style="top: 40%; right: 20%;"></div>
-        <div class="absolute w-3 h-3 bg-white rounded-full opacity-15 animate-pulse" style="bottom: 15%; left: 25%;"></div>
+        <div class="absolute w-4 h-4 bg-white rounded-full opacity-20 particle" style="top: 10%; left: 15%;"></div>
+        <div class="absolute w-6 h-6 bg-blue-200 rounded-full opacity-30 particle" style="top: 40%; right: 20%;"></div>
+        <div class="absolute w-3 h-3 bg-white rounded-full opacity-15 particle" style="bottom: 15%; left: 25%;"></div>
+        <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
     <script>
@@ -81,6 +125,12 @@
         fadeElements.forEach((el, index) => {
             el.style.animationDelay = `${index * 0.2}s`;
         });
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-menu');
+            menu.classList.toggle('active');
+        }
     </script>
 </body>
 </html>
