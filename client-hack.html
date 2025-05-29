@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Client Hack</title>
+    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Script Hack</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -28,7 +28,7 @@
             100% { opacity: 1; transform: translateY(0); }
         }
         .nav-shadow {
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
         .glow:hover {
             filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
@@ -41,6 +41,12 @@
             50% { transform: translateY(-20px); opacity: 0.4; }
             100% { transform: translateY(0); opacity: 0.2; }
         }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            transform: scale(1.05);
+        }
         @media (max-width: 640px) {
             .nav-menu {
                 display: none;
@@ -51,10 +57,14 @@
                 position: absolute;
                 top: 80px;
                 right: 20px;
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.15);
                 backdrop-filter: blur(8px);
                 border-radius: 8px;
                 padding: 10px;
+                transition: all 0.3s ease;
+            }
+            .nav-menu.active a, .nav-menu.active button {
+                font-size: 0.875rem; /* text-sm */
             }
             textarea {
                 height: 40vh !important;
@@ -63,36 +73,36 @@
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
-    <div class="container mx-auto p-6 max-w-6xl relative z-10">
+    <div class="container mx-auto p-6 max-w-7xl relative z-10">
         <!-- Navigation -->
-        <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-10 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
-            <div class="flex items-center space-x-4">
+        <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
+            <div class="flex items-center gap-3">
                 <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
-                <span class="text-white text-2xl font-bold nav-shadow transition-all hover:text-blue-200 duration-300 glow">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
             <div id="navMenu" class="nav-menu flex space-x-6 fade-in">
                 <!-- Menu sẽ được cập nhật động bằng JavaScript -->
             </div>
-            <button class="sm:hidden text-white text-2xl" onclick="toggleMenu()">☰</button>
+            <button class="sm:hidden text-blue-100 text-xl" onclick="toggleMenu()">☰</button>
         </nav>
 
         <!-- Welcome Message -->
         <div id="welcomeMessage" class="text-center mb-8 fade-in">
-            <p class="text-2xl font-medium text-blue-100 drop-shadow-md">Chào mừng bạn đến với Client Hack!</p>
+            <p class="text-2xl font-medium text-blue-100 drop-shadow-md">Chào mừng bạn đến với Script Hack!</p>
         </div>
 
-        <!-- Client Hack Content -->
-        <div id="clientInput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in hidden">
-            <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack link or code here (Owner only)..."></textarea>
+        <!-- Script Hack Content -->
+        <div id="scriptInput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in hidden">
+            <textarea id="scriptCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Script Hack code here (Owner only)..."></textarea>
             <div class="flex justify-end mt-4">
-                <button id="submitClient" class="bg-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-md">Submit</button>
+                <button id="submitScript" class="bg-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-md">Submit</button>
             </div>
         </div>
-        <div id="clientOutput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg mt-6 fade-in">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Client Hack Content</h2>
-            <pre id="clientContent" class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto"></pre>
+        <div id="scriptOutput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg mt-6 fade-in">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Script Hack Content</h2>
+            <pre id="scriptContent" class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto"></pre>
             <div class="flex justify-end mt-4">
-                <button id="copyClient" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition duration-300 shadow-md">Copy Content</button>
+                <button id="copyScript" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition duration-300 shadow-md">Copy Code</button>
             </div>
         </div>
     </div>
@@ -124,7 +134,7 @@
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
             if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
                 isOwner = true;
-                document.getElementById('clientInput').classList.remove('hidden');
+                document.getElementById('scriptInput').classList.remove('hidden');
             }
         }
 
@@ -134,12 +144,12 @@
             const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
             if (loggedInUser) {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Home</a>
-                    <a href="script-hack.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Script Hack</a>
-                    <a href="client-hack.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Client Hack</a>
-                    <a href="bot-discord.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Bot Discord</a>
-                    <a href="#" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">${loggedInUser.email}</a>
-                    <button id="signOutBtn" class="text-white text-lg font-semibold hover:bg-red-600 px-4 py-2 rounded-md transition duration-300">Sign Out</button>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="#" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.email}</a>
+                    <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
@@ -148,12 +158,12 @@
                 });
             } else {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Home</a>
-                    <a href="script-hack.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Script Hack</a>
-                    <a href="client-hack.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Client Hack</a>
-                    <a href="bot-discord.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Bot Discord</a>
-                    <a href="signin.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign In</a>
-                    <a href="signup.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Up</a>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="signin.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
+                    <a href="signup.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
             }
         }
@@ -164,8 +174,8 @@
             checkOwner();
 
             // Load saved content
-            const clientContent = localStorage.getItem('clientContent') || "No content available yet.";
-            document.getElementById('clientContent').textContent = clientContent;
+            const scriptContent = localStorage.getItem('scriptContent') || "No content available yet.";
+            document.getElementById('scriptContent').textContent = scriptContent;
         };
 
         // Toggle mobile menu
@@ -175,33 +185,33 @@
         }
 
         // Code submission and copy functionality
-        const clientInput = document.getElementById('clientCodeInput');
-        const clientOutput = document.getElementById('clientOutput');
-        const clientContent = document.getElementById('clientContent');
-        const submitClient = document.getElementById('submitClient');
-        const copyClient = document.getElementById('copyClient');
+        const scriptInput = document.getElementById('scriptCodeInput');
+        const scriptOutput = document.getElementById('scriptOutput');
+        const scriptContent = document.getElementById('scriptContent');
+        const submitScript = document.getElementById('submitScript');
+        const copyScript = document.getElementById('copyScript');
 
-        submitClient.addEventListener('click', () => {
+        submitScript.addEventListener('click', () => {
             if (!isOwner) {
                 alert("Only the owner can submit content!");
                 return;
             }
-            const code = clientInput.value.trim();
+            const code = scriptInput.value.trim();
             if (code) {
-                localStorage.setItem('clientContent', code);
-                clientContent.textContent = code;
-                clientOutput.classList.remove('hidden');
-                clientInput.value = '';
-                alert("Client Hack submitted successfully!");
+                localStorage.setItem('scriptContent', code);
+                scriptContent.textContent = code;
+                scriptOutput.classList.remove('hidden');
+                scriptInput.value = '';
+                alert("Script submitted successfully!");
             }
         });
 
-        copyClient.addEventListener('click', () => {
-            const code = clientContent.textContent;
+        copyScript.addEventListener('click', () => {
+            const code = scriptContent.textContent;
             navigator.clipboard.writeText(code).then(() => {
-                alert('Client Hack copied to clipboard!');
+                alert('Script copied to clipboard!');
             }).catch(err => {
-                console.error('Failed to copy client hack: ', err);
+                console.error('Failed to copy script: ', err);
             });
         });
     </script>
