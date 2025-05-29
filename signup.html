@@ -77,21 +77,21 @@
         <div class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in max-w-md mx-auto">
             <h2 class="text-3xl font-bold mb-6 text-center text-blue-200">Sign Up</h2>
             <div class="space-y-4">
-                <input id="email" type="email" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Enter your email">
-                <input id="password" type="password" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Enter your password">
-                <input id="confirmPassword" type="password" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Confirm your password">
-                <button id="signUpButton" class="w-full bg-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-md">Sign Up</button>
+                <input id="email" type="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-gray-800 text-white placeholder-gray-400" placeholder="Enter your email">
+                <input id="password" type="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-gray-800 text-white placeholder-gray-400" placeholder="Enter your password">
+                <input id="confirmPassword" type="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-gray-800 text-white placeholder-gray-400" placeholder="Confirm your password">
+                <button id="signUpButton" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-200">Sign Up</button>
             </div>
-            <p class="text-center mt-4 text-blue-100">Already have an account? <a href="signin.html" class="text-blue-200 hover:text-blue-400">Sign In</a></p>
+            <p class="text-center mt-4 text-blue-100">Already have an account? <a href="signin.html" class="text-blue-500 hover:text-blue-600">Sign In</a></p>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
-        <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
+    <footer class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-md p-4 text-center mt-auto">
+        <p class="text-blue-gray-100 text-sm font-medium">@Website Make By Kiên💖</p>
         <div class="mt-2 space-x-4">
-            <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
-            <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
+            <a href="https://discord.gg/your-discord" class="text-blue-600 hover:text-blue-800">Discord</a>
+            <a href="https://github.com/your-project" class="text-blue-600 hover:text-blue-800">GitHub</a>
         </div>
     </footer>
 
@@ -117,7 +117,7 @@
             if (loggedInUser) {
                 navMenu.innerHTML = `
                     <a href="paste.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">${loggedInUser.email}</a>
-                    <button id="signOutBtn" class="text-white text-lg font-semibold hover:bg-red-600 px-4 py-2 rounded-md transition duration-300">Sign Out</button>
+                    <button id="signOutBtn" class="text-white text-lg font-semibold hover:bg-red-500 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Out</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
