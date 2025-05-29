@@ -77,11 +77,11 @@
         <div class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in max-w-md mx-auto">
             <h2 class="text-3xl font-bold mb-6 text-center text-blue-200">Sign In</h2>
             <div class="space-y-4">
-                <input id="email" type="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-gray-800 text-white placeholder-gray-400" placeholder="Enter your email">
-                <input id="password" type="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-gray-800 text-white placeholder-gray-400" placeholder="Enter your password">
-                <button id="signInButton" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-200">Sign In</button>
+                <input id="email" type="text" class="w-full p-3 rounded-md focus:outline-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 hover:bg-gray-800 text-white bg-gray-50/10 placeholder-gray-400" placeholder="Email">
+                <input id="password" type="password" class="w-full p-3 rounded-md focus:outline-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 hover:bg-gray-800 text-white bg-gray-50/10 placeholder-gray-400" placeholder="Password">
+                <button id="signInButton" class="w-full bg-blue-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 transition duration-200 shadow-md">Sign In</button>
             </div>
-            <p class="text-center mt-4 text-blue-100">Don't have an account? <a href="signup.html" class="text-blue-500 hover:text-blue-600">Sign Up</a></p>
+            <p class="text-center mt-4 text-blue-100">Don't have an account? <a href="signup.html" class="text-blue-500 hover:text-blue-600 transition duration-200">Sign Up</a></p>
         </div>
     </div>
 
@@ -89,8 +89,8 @@
     <footer class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-md p-4 text-center mt-auto">
         <p class="text-blue-gray-100 text-sm font-medium">@Website Make By Kiên💖</p>
         <div class="mt-2 space-x-4">
-            <a href="https://discord.gg/your-discord" class="text-blue-600 hover:text-blue-800">Discord</a>
-            <a href="https://github.com/your-project" class="text-blue-600 hover:text-blue-800">GitHub</a>
+            <a href="https://discord.gg/your-discord" class="text-blue-600 hover:text-blue-800 transition duration-200">Discord</a>
+            <a href="https://github.com/jayetcixgaming2010" class="text-blue-600 hover:text-blue-800 transition duration-200">GitHub</a>
         </div>
     </footer>
 
@@ -111,55 +111,73 @@
 
         // Update navigation based on login status
         function updateNav() {
-            const navMenu = document.getElementById('navMenu');
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            if (loggedInUser) {
-                navMenu.innerHTML = `
-                    <a href="paste.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">${loggedInUser.email}</a>
-                    <button id="signOutBtn" class="text-white text-lg font-semibold hover:bg-red-500 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Out</button>
-                `;
-                const signOutBtn = document.getElementById('signOutBtn');
-                signOutBtn.addEventListener('click', () => {
-                    localStorage.removeItem('loggedInUser');
-                    window.location.reload();
-                });
-            } else {
-                navMenu.innerHTML = `
-                    <a href="signin.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign In</a>
-                    <a href="signup.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Up</a>
-                `;
+            try {
+                const navMenu = document.getElementById('navMenu');
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (loggedInUser) {
+                    navMenu.innerHTML = `
+                        <a href="paste.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">${loggedInUser.email}</a>
+                        <button id="signOutBtn" class="text-white text-lg font-semibold hover:bg-red-500 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Out</button>
+                    `;
+                    const signOutBtn = document.getElementById('signOutBtn');
+                    signOutBtn.addEventListener('click', () => {
+                        localStorage.removeItem('loggedInUser');
+                        window.location.reload();
+                    });
+                } else {
+                    navMenu.innerHTML = `
+                        <a href="signin.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign In</a>
+                        <a href="signup.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Up</a>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error updating nav:', error);
             }
         }
 
         // Sign in functionality
-        const signInButton = document.getElementById('signInButton');
-        signInButton.addEventListener('click', () => {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+        function handleSignIn() {
+            try {
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
 
-            if (!email || !password) {
-                alert("Please fill in both email and password!");
-                return;
-            }
+                if (!email || !password) {
+                    alert("Please fill in both email and password!");
+                    return;
+                }
 
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) {
-                alert("No account found! Please sign up first.");
-                return;
-            }
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (!user) {
+                    alert("No account found! Please sign up first.");
+                    return;
+                }
 
-            if (user.email === email && user.password === password) {
-                localStorage.setItem('loggedInUser', JSON.stringify({ email, password }));
-                alert("Sign in successful! Redirecting to Paste page...");
-                window.location.href = 'paste.html';
-            } else {
-                alert("Invalid email or password!");
+                if (user.email === email && user.password === password) {
+                    localStorage.setItem('loggedInUser', JSON.stringify({ email, password }));
+                    alert("Sign in successful! Redirecting to Paste page...");
+                    window.location.href = 'paste.html';
+                } else {
+                    alert("Invalid email or password!");
+                }
+            } catch (error) {
+                console.error('Sign in error:', error);
+                alert("An error occurred during sign in. Please try again.");
             }
-        });
+        }
 
         // Initialize page
         window.onload = function() {
-            updateNav();
+            try {
+                updateNav();
+                const signInButton = document.getElementById('signInButton');
+                if (signInButton) {
+                    signInButton.addEventListener('click', handleSignIn);
+                } else {
+                    console.error('SignInButton not found!');
+                }
+            } catch (error) {
+                console.error('Page load error:', error);
+            }
         };
     </script>
 </body>
