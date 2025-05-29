@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Paste Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .bg-animated {
+            background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .bg-blur {
+            backdrop-filter: blur(5px);
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .tab-active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #60a5fa;
+        }
+    </style>
+</head>
+<body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
+    <div class="container mx-auto p-6 max-w-4xl relative z-10">
+        <!-- Navigation -->
+        <nav class="flex justify-between items-center mb-6">
+            <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-20 transition-transform hover:scale-105">
+            <a href="index.html" class="text-white text-xl font-semibold hover:text-blue-200 transition duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</a>
+        </nav>
+
+        <!-- Welcome Message -->
+        <div id="welcomeMessage" class="text-center mb-6 fade-in hidden">
+            <p class="text-xl text-blue-100 drop-shadow-md">Chào mừng bạn đến với [ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤! Hãy chọn mục để bắt đầu!</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex justify-around mb-6 bg-white bg-opacity-10 p-2 rounded-lg backdrop-blur-md">
+            <button class="tab-button px-4 py-2 rounded-md focus:outline-none tab-active" onclick="openTab('script')">Script Hack</button>
+            <button class="tab-button px-4 py-2 rounded-md focus:outline-none" onclick="openTab('client')">Client Hack</button>
+            <button class="tab-button px-4 py-2 rounded-md focus:outline-none" onclick="openTab('bot')">Bot Discord</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="scriptTab" class="tab-content">
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md shadow-lg fade-in">
+                <textarea id="codeInput" class="w-full h-64 p-4 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-opacity-20 text-white placeholder-gray-300" placeholder="Paste your Script Hack code here..."></textarea>
+                <div class="flex justify-end mt-4">
+                    <button id="submitCode" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition">Submit</button>
+                </div>
+            </div>
+            <div id="codeOutput" class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md shadow-lg mt-6 hidden fade-in">
+                <h2 class="text-xl font-semibold mb-4 text-gray-200">Submitted Code</h2>
+                <pre id="codeContent" class="bg-gray-900 text-white p-4 rounded-md overflow-x-auto"></pre>
+                <div class="flex justify-end mt-4">
+                    <button id="copyCode" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition">Copy Code</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="clientTab" class="tab-content hidden">
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md shadow-lg fade-in text-center">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-200">Client Hack</h2>
+                <p class="text-blue-100">Client Hack siêu xịn chống ban wave. Sử dụng để tối ưu hóa trải nghiệm game của bạn!</p>
+            </div>
+        </div>
+
+        <div id="botTab" class="tab-content hidden">
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-md shadow-lg fade-in text-center">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-200">Bot Discord</h2>
+                <p class="text-blue-100">Bot Discord xịn xò hỗ trợ quản lý server. Tích hợp nhiều tính năng tự động hóa!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-4 text-center mt-auto">
+        <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
+    </footer>
+
+    <!-- Background Particles (CSS Animation) -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute w-4 h-4 bg-white rounded-full opacity-20 animate-pulse" style="top: 10%; left: 15%;"></div>
+        <div class="absolute w-6 h-6 bg-blue-200 rounded-full opacity-30 animate-pulse" style="top: 40%; right: 20%;"></div>
+        <div class="absolute w-3 h-3 bg-white rounded-full opacity-15 animate-pulse" style="bottom: 15%; left: 25%;"></div>
+    </div>
+
+    <script>
+        // Show welcome message when page loads
+        window.onload = function() {
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            welcomeMessage.classList.remove('hidden');
+        };
+
+        // Tab switching functionality
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].style.display = 'none';
+            }
+            // Remove active class from all tab buttons
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('tab-active');
+            }
+            // Show the selected tab and activate the button
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+            event.currentTarget.classList.add('tab-active');
+
+            // Reset code input and output for Script Hack tab
+            if (tabName === 'script') {
+                const codeOutput = document.getElementById('codeOutput');
+                codeOutput.classList.add('hidden');
+                document.getElementById('codeInput').value = '';
+            }
+        }
+
+        // Initialize with Script Hack tab active
+        window.onload = (function() {
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            welcomeMessage.classList.remove('hidden');
+            openTab('script'); // Default tab
+        });
+
+        // Code submission and copy functionality
+        const codeInput = document.getElementById('codeInput');
+        const codeOutput = document.getElementById('codeOutput');
+        const codeContent = document.getElementById('codeContent');
+        const submitCode = document.getElementById('submitCode');
+        const copyCode = document.getElementById('copyCode');
+
+        submitCode.addEventListener('click', () => {
+            const code = codeInput.value.trim();
+            if (code) {
+                codeContent.textContent = code;
+                codeOutput.classList.remove('hidden');
+                codeInput.value = '';
+            }
+        });
+
+        copyCode.addEventListener('click', () => {
+            const code = codeContent.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy code: ', err);
+            });
+        });
+    </script>
+</body>
+</html>
