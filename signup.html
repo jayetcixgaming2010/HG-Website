@@ -21,14 +21,14 @@
             backdrop-filter: blur(8px);
         }
         .fade-in {
-            animation: fadeIn 1s ease-in;
+            animation: fadeIn 1s ease-out;
         }
         @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(10px); }
+            0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
         .nav-shadow {
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
         .glow:hover {
             filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
@@ -41,6 +41,12 @@
             50% { transform: translateY(-20px); opacity: 0.4; }
             100% { transform: translateY(0); opacity: 0.2; }
         }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            transform: scale(1.05);
+        }
         @media (max-width: 640px) {
             .nav-menu {
                 display: none;
@@ -51,10 +57,14 @@
                 position: absolute;
                 top: 80px;
                 right: 20px;
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.15);
                 backdrop-filter: blur(8px);
                 border-radius: 8px;
                 padding: 10px;
+                transition: all 0.3s ease;
+            }
+            .nav-menu.active a, .nav-menu.active button {
+                font-size: 0.875rem; /* text-sm */
             }
         }
     </style>
@@ -62,36 +72,41 @@
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
     <div class="container mx-auto p-6 max-w-6xl relative z-10">
         <!-- Navigation -->
-        <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-10 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
-            <div class="flex items-center space-x-4">
-                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 � C𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
-                <span class="text-white text-2xl font-bold nav-shadow transition-all hover:text-blue-200 duration-300 glow">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+        <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
+                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
-            <div id="navMenu" class="nav-menu flex space-x-6 fade-in">
+            <div id="navMenu" class="nav-menu flex space-x-10 fade-in">
                 <!-- Menu sẽ được cập nhật động bằng JavaScript -->
             </div>
-            <button class="sm:hidden text-white text-2xl" onclick="toggleMenu()">☰</button>
+            <button class="sm:hidden text-blue-100 text-xl" onclick="toggleMenu()">☰</button>
         </nav>
 
         <!-- Sign Up Form -->
-        <div class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in max-w-md mx-auto">
-            <h2 class="text-3xl font-bold mb-6 text-center text-blue-200">Sign Up</h2>
-            <div class="space-y-4">
-                <input id="email" type="text" class="w-full p-3 rounded-md focus:outline-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 hover:bg-gray-800 text-white bg-gray-50/10 placeholder-gray-400" placeholder="Email">
-                <input id="passwordInput" type="password" class="w-full p-3 rounded-md focus:outline-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 hover:bg-gray-800 text-white bg-gray-50/10 placeholder-gray-400" placeholder="Password">
-                <input id="passwordConfirm" type="password" class="w-full p-3 rounded-md focus:outline-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 hover:bg-gray-800 text-white bg-gray-50/10 placeholder-gray-400" placeholder="Confirm password">
-                <button id="signUpButton" class="w-full bg-blue-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 transition duration-200 shadow-md">Sign Up</button>
-            </div>
-            <p class="text-center mt-4 text-blue-100">Already have an account? <a href="signin.html" class="text-blue-500 hover:text-blue-600 transition duration-200">Sign In</a></p>
+        <div class="max-w-md mx-auto bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in">
+            <h2 class="text-2xl font-semibold text-blue-100 mb-6 text-center">Sign Up</h2>
+            <form id="signUpForm">
+                <div class="mb-4">
+                    <label for="newEmail" class="block text-blue-200 mb-2">Email</label>
+                    <input type="email" id="newEmail" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-4">
+                    <label for="newPassword" class="block text-blue-200 mb-2">Password</label>
+                    <input type="password" id="newPassword" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-full font-semibold hover:bg-blue-700 transition duration-300 shadow-md">Sign Up</button>
+            </form>
+            <p class="text-blue-200 mt-4 text-center">Already have an account? <a href="signin.html" class="text-blue-400 hover:text-blue-600">Sign In</a></p>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-md p-4 text-center mt-auto">
-        <p class="text-blue-gray-100 text-sm font-medium">@Website Make By Kiên💖</p>
+    <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
+        <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
         <div class="mt-2 space-x-4">
-            <a href="https://discord.gg/your-discord" class="text-blue-600 hover:text-blue-800 transition duration-200">Discord</a>
-            <a href="https://github.com/jayetcixgaming2010" class="text-blue-600 hover:text-blue-800 transition duration-200">GitHub</a>
+            <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
+            <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
         </div>
     </footer>
 
@@ -104,86 +119,64 @@
     </div>
 
     <script>
+        // Update navigation based on login status
+        function updateNav() {
+            const navMenu = document.getElementById('navMenu');
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (loggedInUser) {
+                navMenu.innerHTML = `
+                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Bot Discord</a>
+                    <a href="#" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">${loggedInUser.email}</a>
+                    <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Sign Out</button>
+                `;
+                const signOutBtn = document.getElementById('signOutBtn');
+                signOutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('loggedInUser');
+                    window.location.reload();
+                });
+            } else {
+                navMenu.innerHTML = `
+                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Bot Discord</a>
+                    <a href="signin.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Sign In</a>
+                    <a href="signup.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-4 py-2 rounded-md transition duration-300 nav-link whitespace-nowrap">Sign Up</a>
+                `;
+            }
+        }
+
+        // Sign Up functionality
+        document.getElementById('signUpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('newEmail').value;
+            const password = document.getElementById('newPassword').value;
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            if (users.find(u => u.email === email)) {
+                alert('Email already exists!');
+                return;
+            }
+
+            users.push({ email, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Sign up successful! Please sign in.');
+            window.location.href = 'signin.html';
+        });
+
+        // Load page and update navigation
+        window.onload = function() {
+            updateNav();
+        };
+
         // Toggle mobile menu
         function toggleMenu() {
             const menu = document.querySelector('.nav-menu');
             menu.classList.toggle('active');
         }
-
-        // Update navigation based on login status
-        function updateNav() {
-            try {
-                const navMenu = document.getElementById('navMenu');
-                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                if (loggedInUser) {
-                    navMenu.innerHTML = `
-                        <a href="paste.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">${loggedInUser.email}</a>
-                        <button id="signOutBtn" class="text-white text-lg font-semibold hover:bg-red-500 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Out</button>
-                    `;
-                    const signOutBtn = document.getElementById('signOutBtn');
-                    signOutBtn.addEventListener('click', () => {
-                        localStorage.removeItem('loggedInUser');
-                        window.location.reload();
-                    });
-                } else {
-                    navMenu.innerHTML = `
-                        <a href="signin.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign In</a>
-                        <a href="signup.html" class="text-white text-lg font-semibold hover:bg-blue-600 hover:text-white px-4 py-2 rounded-md transition duration-300">Sign Up</a>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error updating nav:', error);
-            }
-        }
-
-        // Sign up functionality
-        function handleSignUp() {
-            try {
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('passwordInput').value.trim();
-                const confirmPassword = document.getElementById('passwordConfirm').value.trim();
-
-                if (!email || !password || !confirmPassword) {
-                    alert("Please fill in all fields!");
-                    return;
-                }
-
-                if (password !== confirmPassword) {
-                    alert("Passwords do not match!");
-                    return;
-                }
-
-                // Check if email already exists
-                const existingUser = JSON.parse(localStorage.getItem('user'));
-                if (existingUser && existingUser.email === email) {
-                    alert("This email is already registered! Please use a different email.");
-                    return;
-                }
-
-                // Save new user
-                localStorage.setItem('user', JSON.stringify({ email, password }));
-                alert("Sign up successful! Redirecting to Sign In page...");
-                window.location.href = 'signin.html';
-            } catch (error) {
-                console.error('Sign up error:', error);
-                alert("An error occurred during sign up. Please try again.");
-            }
-        }
-
-        // Initialize page
-        window.onload = function() {
-            try {
-                updateNav();
-                const signUpButton = document.getElementById('signUpButton');
-                if (signUpButton) {
-                    signUpButton.addEventListener('click', handleSignUp);
-                } else {
-                    console.error('SignUpButton not found!');
-                }
-            } catch (error) {
-                console.error('Page load error:', error);
-            }
-        };
     </script>
 </body>
 </html>
