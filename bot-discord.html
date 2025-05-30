@@ -99,23 +99,20 @@
         .btn-primary:hover {
             background: #5439cc;
         }
-        .btn-upload {
+        .btn-add {
             background: #ec4899;
-            width: 50px;
-            height: 50px;
+            padding: 10px 15px;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
             position: fixed;
             bottom: 20px;
             right: 20px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            z-index: 1000;
         }
-        .btn-upload:hover {
-            transform: scale(1.1);
+        .btn-add:hover {
+            background: #d43f8d;
         }
         .item-grid {
             display: grid;
@@ -208,7 +205,7 @@
         <!-- Welcome Message -->
         <div class="text-center mb-8 fade-in">
             <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Bot Discord</h1>
-            <p class="text-lg text-blue-200 mt-2">Custom Discord bots for server management</p>
+            <p class="text-lg text-blue-200 mt-2">Powerful Discord bots for automation</p>
         </div>
 
         <!-- Bot List -->
@@ -221,15 +218,12 @@
             <button id="nextPageBot" disabled>Next</button>
         </div>
 
-        <!-- Upload Button (Only for Owner) -->
-        <div id="uploadButton" class="btn-upload hidden">+</div>
-
-        <!-- Bot Submission Form -->
+        <!-- Bot Submission Form (Hidden by Default) -->
         <div id="botSubmission" class="card fade-in mt-8 hidden">
             <h2 id="botInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Bot</h2>
-            <input id="botTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Bot Title" />
+            <input id="botTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Bot Title" required />
             <input id="botImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <textarea id="botCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Bot Discord code here..."></textarea>
+            <textarea id="botCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Bot code here..." required></textarea>
             <div class="flex justify-end mt-4 space-x-4">
                 <button id="submitBot" class="btn-primary text-white">Submit for Review</button>
                 <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
@@ -261,6 +255,9 @@
         <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
+    <!-- Add Button (For Owner) -->
+    <button id="addButton" class="btn-add text-white hidden">+</button>
+
     <script>
         // Encryption key for localStorage
         const ENCRYPTION_KEY = "HGClientHack2025";
@@ -276,6 +273,7 @@
                 const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
                 return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
             } catch (e) {
+                console.error("Decryption error:", e);
                 return null;
             }
         }
@@ -287,10 +285,17 @@
 
         function checkOwner() {
             const user = decryptData(localStorage.getItem('loggedInUser'));
-            if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
-                isOwner = true;
-                document.getElementById('uploadButton').classList.remove('hidden');
+            if (user) {
+                if (user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
+                    isOwner = true;
+                } else {
+                    isOwner = false;
+                }
+            } else {
+                isOwner = false;
             }
+            updateNav();
+            updateAddButton();
         }
 
         // Update navigation based on login status
@@ -303,7 +308,6 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    ${isOwner ? `<a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Owner Settings</a>` : ''}
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
@@ -321,6 +325,16 @@
                     <a href="signin.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
                     <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
+            }
+        }
+
+        // Update add button visibility
+        function updateAddButton() {
+            const addButton = document.getElementById('addButton');
+            if (isOwner) {
+                addButton.classList.remove('hidden');
+            } else {
+                addButton.classList.add('hidden');
             }
         }
 
@@ -368,7 +382,7 @@
                 card.innerHTML = `
                     ${bot.imageBase64 ? `<img src="${bot.imageBase64}" class="item-image" alt="${bot.title} image" />` : ''}
                     <h3 class="text-xl font-semibold text-blue-100 mb-2">${bot.title}</h3>
-                    <p class="text-blue-200 mb-4">A Discord bot for ${bot.title.toLowerCase()} server management.</p>
+                    <p class="text-blue-200 mb-4">A bot for ${bot.title.toLowerCase()} automation.</p>
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${bot.code}</pre>
                     <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-bot" data-index="${globalIndex}">Copy Code</button>
@@ -382,7 +396,7 @@
                     const index = parseInt(button.getAttribute('data-index'));
                     const bot = bots[index];
                     navigator.clipboard.writeText(bot.code).then(() => {
-                        alert('Bot copied to clipboard!');
+                        alert('Bot code copied to clipboard!');
                     }).catch(err => {
                         console.error('Failed to copy bot: ', err);
                     });
@@ -394,3 +408,132 @@
         const botTitleInput = document.getElementById('botTitleInput');
         const botImageInput = document.getElementById('botImageInput');
         const botCodeInput = document.getElementById('botCodeInput');
+        const submitBot = document.getElementById('submitBot');
+        const cancelSubmit = document.getElementById('cancelSubmit');
+        const botSubmission = document.getElementById('botSubmission');
+
+        submitBot.addEventListener('click', () => {
+            const title = botTitleInput.value.trim();
+            const code = botCodeInput.value.trim();
+
+            if (!title || !code) {
+                alert("Please provide both a title and bot code!");
+                return;
+            }
+
+            const file = botImageInput.files[0];
+            let bots = JSON.parse(localStorage.getItem('bots')) || [];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imageBase64 = event.target.result;
+                    bots.push({ title, imageBase64, code });
+                    try {
+                        localStorage.setItem('bots', JSON.stringify(bots));
+                        resetForm();
+                        alert("Bot submitted successfully!");
+                        loadBots();
+                    } catch (e) {
+                        alert("Failed to save bot: localStorage might be full.");
+                    }
+                };
+                reader.onerror = function() {
+                    alert("Failed to read the image file!");
+                };
+                reader.readAsDataURL(file);
+            } else {
+                bots.push({ title, code });
+                localStorage.setItem('bots', JSON.stringify(bots));
+                resetForm();
+                alert("Bot submitted successfully!");
+                loadBots();
+            }
+        });
+
+        cancelSubmit.addEventListener('click', () => {
+            resetForm();
+        });
+
+        // Reset form
+        function resetForm() {
+            botTitleInput.value = '';
+            botImageInput.value = '';
+            botCodeInput.value = '';
+            botSubmission.classList.add('hidden');
+            document.getElementById('botList').classList.remove('hidden');
+            document.querySelector('.pagination').classList.remove('hidden');
+            currentPage = 1;
+        }
+
+        // Load page
+        window.onload = function() {
+            checkOwner();
+            loadBots();
+
+            // Add button event listener
+            const addButton = document.getElementById('addButton');
+            addButton.addEventListener('click', () => {
+                document.getElementById('botList').classList.add('hidden');
+                document.getElementById('botSubmission').classList.remove('hidden');
+                document.querySelector('.pagination').classList.add('hidden');
+            });
+
+            // Pagination
+            document.getElementById('prevPageBot').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadBots(document.getElementById('sortOptions').value);
+                }
+            });
+            document.getElementById('nextPageBot').addEventListener('click', () => {
+                const bots = JSON.parse(localStorage.getItem('bots')) || [];
+                const totalPages = Math.ceil(bots.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadBots(document.getElementById('sortOptions').value);
+                }
+            });
+
+            // Sort options
+            document.getElementById('sortOptions').addEventListener('change', (e) => {
+                currentPage = 1;
+                loadBots(e.target.value);
+            });
+        };
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Music toggle
+        const musicToggle = document.getElementById('musicToggle');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        musicToggle.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicToggle.textContent = '🔊';
+            } else {
+                backgroundMusic.pause();
+                musicToggle.textContent = '🔇';
+            }
+        });
+
+        // Load theme from localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+    </script>
+</body>
+</html>
