@@ -71,9 +71,6 @@
             .nav-menu.active a, .nav-menu.active button {
                 font-size: 0.875rem; /* text-sm */
             }
-            textarea {
-                height: 40vh !important;
-            }
         }
         .card {
             background: rgba(255, 255, 255, 0.1);
@@ -169,19 +166,7 @@
         <!-- Welcome Message -->
         <div class="text-center mb-8 fade-in">
             <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Bot Discord</h1>
-            <p class="text-lg text-blue-200 mt-2">Advanced Discord bots for server management</p>
-        </div>
-
-        <!-- Bot Submission (Owner Only) -->
-        <div id="botInput" class="card fade-in hidden mb-8">
-            <h2 id="botInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Submit Bot Discord (Owner Only)</h2>
-            <input id="botTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Bot Title" />
-            <input id="botImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <textarea id="botCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Bot Discord code here (Owner only)..."></textarea>
-            <div class="flex justify-end mt-4 space-x-4">
-                <button id="submitBot" class="btn-primary text-white">Submit</button>
-                <button id="cancelEdit" class="btn-delete text-white hidden">Cancel</button>
-            </div>
+            <p class="text-lg text-blue-200 mt-2">Custom Discord bots for server management</p>
         </div>
 
         <!-- Bot List -->
@@ -215,7 +200,6 @@
     <script>
         // Check owner status
         let isOwner = false;
-        let editIndex = null; // To track which bot is being edited
         const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
         const OWNER_PASSWORD = "kien$$$dz2k10";
 
@@ -223,7 +207,6 @@
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
             if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
                 isOwner = true;
-                document.getElementById('botInput').classList.remove('hidden');
             }
         }
 
@@ -237,6 +220,7 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    ${isOwner ? `<a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Owner Settings</a>` : ''}
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
@@ -268,16 +252,13 @@
             const totalItems = bots.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            // Calculate start and end index for the current page
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
             const paginatedBots = bots.slice(startIndex, endIndex);
 
-            // Update page info
             const pageInfo = document.getElementById('pageInfo');
             pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
 
-            // Update button states
             const prevButton = document.getElementById('prevPage');
             const nextButton = document.getElementById('nextPage');
             prevButton.disabled = currentPage === 1;
@@ -290,7 +271,7 @@
 
             botList.innerHTML = '';
             paginatedBots.forEach((bot, index) => {
-                const globalIndex = startIndex + index; // Calculate global index for copy/edit/delete functionality
+                const globalIndex = startIndex + index;
                 const card = document.createElement('div');
                 card.className = 'card fade-in';
                 card.innerHTML = `
@@ -301,7 +282,7 @@
                     <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-bot" data-index="${globalIndex}">Copy Code</button>
                         ${isOwner ? `
-                            <button class="btn-edit text-white edit-bot" data-index="${globalIndex}">Edit</button>
+                            <button class="btn-edit text-white edit-bot" data-index="${globalIndex}" onclick="window.location.href='owner-settings.html#bot'">Edit</button>
                             <button class="btn-delete text-white delete-bot" data-index="${globalIndex}">Delete</button>
                         ` : ''}
                     </div>
@@ -309,7 +290,6 @@
                 botList.appendChild(card);
             });
 
-            // Add copy functionality to buttons
             document.querySelectorAll('.copy-bot').forEach(button => {
                 button.addEventListener('click', () => {
                     const index = parseInt(button.getAttribute('data-index'));
@@ -322,25 +302,7 @@
                 });
             });
 
-            // Add edit functionality to buttons (only for owner)
             if (isOwner) {
-                document.querySelectorAll('.edit-bot').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const index = parseInt(button.getAttribute('data-index'));
-                        editIndex = index;
-                        const bot = bots[index];
-                        // Populate the form with existing data
-                        document.getElementById('botTitleInput').value = bot.title;
-                        document.getElementById('botCodeInput').value = bot.code;
-                        document.getElementById('botImageInput').value = ''; // File input cannot be pre-filled
-                        document.getElementById('botInputTitle').textContent = 'Edit Bot Discord';
-                        document.getElementById('submitBot').textContent = 'Save';
-                        document.getElementById('cancelEdit').classList.remove('hidden');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    });
-                });
-
-                // Add delete functionality to buttons (only for owner)
                 document.querySelectorAll('.delete-bot').forEach(button => {
                     button.addEventListener('click', () => {
                         const index = parseInt(button.getAttribute('data-index'));
@@ -348,7 +310,7 @@
                             const bots = JSON.parse(localStorage.getItem('bots')) || [];
                             bots.splice(index, 1);
                             localStorage.setItem('bots', JSON.stringify(bots));
-                            currentPage = 1; // Reset to first page after deletion
+                            currentPage = 1;
                             loadBots();
                         }
                     });
@@ -356,13 +318,11 @@
             }
         }
 
-        // Load page
         window.onload = function() {
             updateNav();
             checkOwner();
             loadBots();
 
-            // Add event listeners for pagination buttons
             document.getElementById('prevPage').addEventListener('click', () => {
                 if (currentPage > 1) {
                     currentPage--;
@@ -380,109 +340,9 @@
             });
         };
 
-        // Toggle mobile menu
         function toggleMenu() {
             const menu = document.querySelector('.nav-menu');
             menu.classList.toggle('active');
-        }
-
-        // Code submission/edit functionality
-        const botTitleInput = document.getElementById('botTitleInput');
-        const botImageInput = document.getElementById('botImageInput');
-        const botCodeInput = document.getElementById('botCodeInput');
-        const submitBot = document.getElementById('submitBot');
-        const cancelEdit = document.getElementById('cancelEdit');
-
-        submitBot.addEventListener('click', () => {
-            if (!isOwner) {
-                alert("Only the owner can submit or edit content!");
-                return;
-            }
-
-            const title = botTitleInput.value.trim();
-            const code = botCodeInput.value.trim();
-
-            if (!title || !code) {
-                alert("Please provide both a title and bot code!");
-                return;
-            }
-
-            const file = botImageInput.files[0];
-            const bots = JSON.parse(localStorage.getItem('bots')) || [];
-
-            if (editIndex !== null) {
-                // Edit existing bot
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const imageBase64 = event.target.result;
-                        bots[editIndex] = { title, imageBase64, code };
-                        try {
-                            localStorage.setItem('bots', JSON.stringify(bots));
-                            resetForm();
-                            alert("Bot updated successfully!");
-                            loadBots();
-                        } catch (e) {
-                            alert("Failed to update bot: localStorage might be full. Try removing some bots or using smaller images.");
-                        }
-                    };
-                    reader.onerror = function() {
-                        alert("Failed to read the image file!");
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    // Keep the existing image if no new image is uploaded
-                    bots[editIndex] = { title, imageBase64: bots[editIndex].imageBase64 || '', code };
-                    localStorage.setItem('bots', JSON.stringify(bots));
-                    resetForm();
-                    alert("Bot updated successfully!");
-                    loadBots();
-                }
-            } else {
-                // Add new bot
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const imageBase64 = event.target.result;
-                        bots.push({ title, imageBase64, code });
-                        try {
-                            localStorage.setItem('bots', JSON.stringify(bots));
-                            resetForm();
-                            alert("Bot submitted successfully!");
-                            loadBots();
-                        } catch (e) {
-                            alert("Failed to save bot: localStorage might be full. Try removing some bots or using smaller images.");
-                        }
-                    };
-                    reader.onerror = function() {
-                        alert("Failed to read the image file!");
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    bots.push({ title, code });
-                    localStorage.setItem('bots', JSON.stringify(bots));
-                    resetForm();
-                    alert("Bot submitted successfully!");
-                    loadBots();
-                }
-            }
-        });
-
-        // Cancel edit functionality
-        cancelEdit.addEventListener('click', () => {
-            resetForm();
-        });
-
-        // Reset form to initial state
-        function resetForm() {
-            botTitleInput.value = '';
-            botImageInput.value = '';
-            botCodeInput.value = '';
-            document.getElementById('botInputTitle').textContent = 'Submit Bot Discord (Owner Only)';
-            document.getElementById('submitBot').textContent = 'Submit';
-            document.getElementById('cancelEdit').classList.add('hidden');
-            editIndex = null;
-            currentPage = 1; // Reset to first page after submission or cancel
         }
     </script>
 </body>
