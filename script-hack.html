@@ -255,7 +255,7 @@
         <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
-    <!-- Add Button (Chỉ hiển thị cho owner) -->
+    <!-- Add Button (Chỉ hiển thị khi nhập đúng mật khẩu) -->
     <button id="addButton" class="btn-add text-white hidden">+</button>
 
     <script>
@@ -278,26 +278,16 @@
             }
         }
 
-        // Check owner status
-        let isOwner = false;
-        const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
-        const OWNER_PASSWORD = "kien$$$dz2k10";
+        // Check password status
+        let isAuthorized = false;
+        const CORRECT_PASSWORD = "kien$$$dz2k10";
 
-        function checkOwner() {
-            const user = decryptData(localStorage.getItem('loggedInUser'));
-            console.log("User from localStorage:", user);
-            if (user) {
-                console.log("User email:", user.email, "User password:", user.password);
-                if (user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
-                    isOwner = true;
-                    alert("You are logged in as the owner! The 'Add' button should be visible.");
-                } else {
-                    isOwner = false;
-                    alert("You are not the owner. Please log in with email: " + OWNER_EMAIL + " and password: " + OWNER_PASSWORD);
+        function checkPassword() {
+            let storedPassword = localStorage.getItem('uploadPassword');
+            if (storedPassword) {
+                if (decryptData(storedPassword) === CORRECT_PASSWORD) {
+                    isAuthorized = true;
                 }
-            } else {
-                isOwner = false;
-                alert("No user is logged in. Please log in with email: " + OWNER_EMAIL + " and password: " + OWNER_PASSWORD);
             }
             updateNav();
             updateAddButton();
@@ -313,15 +303,25 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    <a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0 ${isOwner ? '' : 'hidden'}">Owner Settings</a>
+                    <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0 ${isAuthorized ? '' : 'hidden'}" id="uploadLink">Upload</a>
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
                     localStorage.removeItem('loggedInUser');
+                    localStorage.removeItem('uploadPassword');
+                    isAuthorized = false;
                     window.location.href = "index.html";
                 });
+                const uploadLink = document.getElementById('uploadLink');
+                if (uploadLink) {
+                    uploadLink.addEventListener('click', () => {
+                        document.getElementById('scriptList').classList.add('hidden');
+                        document.getElementById('scriptSubmission').classList.remove('hidden');
+                        document.querySelector('.pagination').classList.add('hidden');
+                    });
+                }
             } else {
                 navMenu.innerHTML = `
                     <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
@@ -337,14 +337,59 @@
         // Update add button visibility
         function updateAddButton() {
             const addButton = document.getElementById('addButton');
-            if (isOwner) {
+            if (isAuthorized) {
                 addButton.classList.remove('hidden');
-                console.log("Add button is now visible because isOwner is true.");
             } else {
                 addButton.classList.add('hidden');
-                console.log("Add button is hidden because isOwner is false.");
             }
         }
+
+        // Password prompt on page load
+        window.onload = function() {
+            checkPassword();
+            loadScripts();
+
+            if (!isAuthorized) {
+                const password = prompt("Please enter the password to access the Upload feature:");
+                if (password === CORRECT_PASSWORD) {
+                    localStorage.setItem('uploadPassword', encryptData(password));
+                    isAuthorized = true;
+                    checkPassword();
+                } else {
+                    alert("Incorrect password. Upload feature is not accessible.");
+                }
+            }
+
+            // Add button event listener
+            const addButton = document.getElementById('addButton');
+            addButton.addEventListener('click', () => {
+                document.getElementById('scriptList').classList.add('hidden');
+                document.getElementById('scriptSubmission').classList.remove('hidden');
+                document.querySelector('.pagination').classList.add('hidden');
+            });
+
+            // Pagination
+            document.getElementById('prevPageScript').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadScripts(document.getElementById('sortOptions').value);
+                }
+            });
+            document.getElementById('nextPageScript').addEventListener('click', () => {
+                const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+                const totalPages = Math.ceil(scripts.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadScripts(document.getElementById('sortOptions').value);
+                }
+            });
+
+            // Sort options
+            document.getElementById('sortOptions').addEventListener('change', (e) => {
+                currentPage = 1;
+                loadScripts(e.target.value);
+            });
+        };
 
         // Pagination state
         let currentPage = 1;
@@ -394,7 +439,7 @@
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${script.code}</pre>
                     <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-script" data-index="${globalIndex}">Copy Code</button>
-                        ${isOwner ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-script" data-index="${globalIndex}">Delete</button>` : ''}
+                        ${isAuthorized ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-script" data-index="${globalIndex}">Delete</button>` : ''}
                     </div>
                 `;
                 scriptList.appendChild(card);
@@ -413,8 +458,8 @@
                 });
             });
 
-            // Delete functionality (only for owner)
-            if (isOwner) {
+            // Delete functionality (only for authorized users)
+            if (isAuthorized) {
                 document.querySelectorAll('.delete-script').forEach(button => {
                     button.addEventListener('click', () => {
                         const index = parseInt(button.getAttribute('data-index'));
@@ -490,42 +535,6 @@
             currentPage = 1;
             loadScripts(document.getElementById('sortOptions').value);
         }
-
-        // Load page
-        window.onload = function() {
-            checkOwner();
-            loadScripts();
-
-            // Add button event listener
-            const addButton = document.getElementById('addButton');
-            addButton.addEventListener('click', () => {
-                document.getElementById('scriptList').classList.add('hidden');
-                document.getElementById('scriptSubmission').classList.remove('hidden');
-                document.querySelector('.pagination').classList.add('hidden');
-            });
-
-            // Pagination
-            document.getElementById('prevPageScript').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    loadScripts(document.getElementById('sortOptions').value);
-                }
-            });
-            document.getElementById('nextPageScript').addEventListener('click', () => {
-                const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
-                const totalPages = Math.ceil(scripts.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    loadScripts(document.getElementById('sortOptions').value);
-                }
-            });
-
-            // Sort options
-            document.getElementById('sortOptions').addEventListener('change', (e) => {
-                currentPage = 1;
-                loadScripts(e.target.value);
-            });
-        };
 
         // Toggle mobile menu
         function toggleMenu() {
