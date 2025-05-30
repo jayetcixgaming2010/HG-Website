@@ -235,26 +235,49 @@
             }
         }
 
-        // Load and display bots
+        // Pagination state
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // Load and display bots with pagination
         function loadBots() {
             const botList = document.getElementById('botList');
             const bots = JSON.parse(localStorage.getItem('bots')) || [];
+            const totalItems = bots.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            if (bots.length === 0) {
+            // Calculate start and end index for the current page
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const paginatedBots = bots.slice(startIndex, endIndex);
+
+            // Update page info
+            const pageInfo = document.getElementById('pageInfo');
+            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
+
+            // Update button states
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages || totalPages === 0;
+
+            if (paginatedBots.length === 0) {
                 botList.innerHTML = '<p class="text-center text-blue-200">No bots available yet.</p>';
                 return;
             }
 
             botList.innerHTML = '';
-            bots.forEach((bot, index) => {
+            paginatedBots.forEach((bot, index) => {
+                const globalIndex = startIndex + index; // Calculate global index for copy functionality
                 const card = document.createElement('div');
                 card.className = 'card fade-in';
                 card.innerHTML = `
+                    ${bot.imageBase64 ? `<img src="${bot.imageBase64}" class="bot-image" alt="${bot.title} image" />` : ''}
                     <h3 class="text-xl font-semibold text-blue-100 mb-2">${bot.title}</h3>
                     <p class="text-blue-200 mb-4">A Discord bot for ${bot.title.toLowerCase()} server management.</p>
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${bot.code}</pre>
                     <div class="flex justify-end">
-                        <button class="btn-primary text-white copy-bot" data-index="${index}">Copy Code</button>
+                        <button class="btn-primary text-white copy-bot" data-index="${globalIndex}">Copy Code</button>
                     </div>
                 `;
                 botList.appendChild(card);
@@ -263,7 +286,7 @@
             // Add copy functionality to buttons
             document.querySelectorAll('.copy-bot').forEach(button => {
                 button.addEventListener('click', () => {
-                    const index = button.getAttribute('data-index');
+                    const index = parseInt(button.getAttribute('data-index'));
                     const bot = bots[index];
                     navigator.clipboard.writeText(bot.code).then(() => {
                         alert('Bot copied to clipboard!');
@@ -279,6 +302,23 @@
             updateNav();
             checkOwner();
             loadBots();
+
+            // Add event listeners for pagination buttons
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadBots();
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const bots = JSON.parse(localStorage.getItem('bots')) || [];
+                const totalPages = Math.ceil(bots.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadBots();
+                }
+            });
         };
 
         // Toggle mobile menu
@@ -289,6 +329,7 @@
 
         // Code submission functionality
         const botTitleInput = document.getElementById('botTitleInput');
+        const botImageInput = document.getElementById('botImageInput');
         const botCodeInput = document.getElementById('botCodeInput');
         const submitBot = document.getElementById('submitBot');
 
@@ -306,14 +347,42 @@
                 return;
             }
 
-            const bots = JSON.parse(localStorage.getItem('bots')) || [];
-            bots.push({ title, code });
-            localStorage.setItem('bots', JSON.stringify(bots));
-
-            botTitleInput.value = '';
-            botCodeInput.value = '';
-            alert("Bot submitted successfully!");
-            loadBots();
+            const file = botImageInput.files[0];
+            if (file) {
+                // Convert image to Base64
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imageBase64 = event.target.result;
+                    const bots = JSON.parse(localStorage.getItem('bots')) || [];
+                    bots.push({ title, imageBase64, code });
+                    try {
+                        localStorage.setItem('bots', JSON.stringify(bots));
+                        botTitleInput.value = '';
+                        botImageInput.value = '';
+                        botCodeInput.value = '';
+                        currentPage = 1; // Reset to first page after submission
+                        alert("Bot submitted successfully!");
+                        loadBots();
+                    } catch (e) {
+                        alert("Failed to save bot: localStorage might be full. Try removing some bots or using smaller images.");
+                    }
+                };
+                reader.onerror = function() {
+                    alert("Failed to read the image file!");
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // No image uploaded
+                const bots = JSON.parse(localStorage.getItem('bots')) || [];
+                bots.push({ title, code });
+                localStorage.setItem('bots', JSON.stringify(bots));
+                botTitleInput.value = '';
+                botImageInput.value = '';
+                botCodeInput.value = '';
+                currentPage = 1; // Reset to first page after submission
+                alert("Bot submitted successfully!");
+                loadBots();
+            }
         });
     </script>
 </body>
