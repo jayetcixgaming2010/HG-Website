@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Owner Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: auto;
+            overflow-y: auto;
+        }
+        .bg-animated {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+            background-size: 400% 400%;
+            animation: gradientAnimation 12s ease infinite;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .bg-blur {
+            backdrop-filter: blur(8px);
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .nav-shadow {
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+        .glow:hover {
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+        }
+        .particle {
+            animation: particleMove 20s ease-in-out infinite;
+        }
+        @keyframes particleMove {
+            0% { transform: translateY(0); opacity: 0.2; }
+            50% { transform: translateY(-20px); opacity: 0.4; }
+            100% { transform: translateY(0); opacity: 0.2; }
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        @media (max-width: 640px) {
+            .nav-menu {
+                display: none;
+            }
+            .nav-menu.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 80px;
+                right: 20px;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(8px);
+                border-radius: 8px;
+                padding: 10px;
+                transition: all 0.3s ease;
+            }
+            .nav-menu.active a, .nav-menu.active button {
+                font-size: 0.875rem; /* text-sm */
+            }
+            textarea {
+                height: 40vh !important;
+            }
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background: #6b48ff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #5439cc;
+        }
+        .btn-edit {
+            background: #f59e0b;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-edit:hover {
+            background: #d97706;
+        }
+        .btn-delete {
+            background: #ef4444;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .item-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background: #6b48ff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .pagination button:hover {
+            background: #5439cc;
+        }
+        .pagination button:disabled {
+            background: #4b3a99;
+            cursor: not-allowed;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            background: #6b48ff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .tab-button:hover {
+            background: #5439cc;
+        }
+        .tab-button.active {
+            background: #ec4899;
+        }
+    </style>
+</head>
+<body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white">
+    <div class="container mx-auto p-6 max-w-7xl relative z-10">
+        <!-- Navigation -->
+        <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
+                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+            </div>
+            <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
+                <!-- Menu sẽ được cập nhật động bằng JavaScript -->
+            </div>
+            <button class="sm:hidden text-blue-100 text-xl" onclick="toggleMenu()">☰</button>
+        </nav>
+
+        <!-- Welcome Message -->
+        <div class="text-center mb-8 fade-in">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Owner Settings</h1>
+            <p class="text-lg text-blue-200 mt-2">Manage your scripts, clients, and bots</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('script')">Script Hack</button>
+            <button class="tab-button" onclick="showTab('client')">Client Hack</button>
+            <button class="tab-button" onclick="showTab('bot')">Bot Discord</button>
+        </div>
+
+        <!-- Script Hack Section -->
+        <div id="scriptTab" class="tab-content">
+            <!-- Script Submission -->
+            <div class="card fade-in mb-8">
+                <h2 id="scriptInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Submit Script Hack</h2>
+                <input id="scriptTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Script Title" />
+                <input id="scriptImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
+                <textarea id="scriptCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Script Hack code here..."></textarea>
+                <div class="flex justify-end mt-4 space-x-4">
+                    <button id="submitScript" class="btn-primary text-white">Submit</button>
+                    <button id="cancelEditScript" class="btn-delete text-white hidden">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Script List -->
+            <div id="scriptList" class="item-grid"></div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button id="prevPageScript" disabled>Previous</button>
+                <span id="pageInfoScript" class="text-blue-100 font-semibold"></span>
+                <button id="nextPageScript" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Client Hack Section -->
+        <div id="clientTab" class="tab-content hidden">
+            <!-- Client Submission -->
+            <div class="card fade-in mb-8">
+                <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Submit Client Hack</h2>
+                <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" />
+                <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
+                <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here..."></textarea>
+                <div class="flex justify-end mt-4 space-x-4">
+                    <button id="submitClient" class="btn-primary text-white">Submit</button>
+                    <button id="cancelEditClient" class="btn-delete text-white hidden">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Client List -->
+            <div id="clientList" class="item-grid"></div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button id="prevPageClient" disabled>Previous</button>
+                <span id="pageInfoClient" class="text-blue-100 font-semibold"></span>
+                <button id="nextPageClient" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Bot Discord Section -->
+        <div id="botTab" class="tab-content hidden">
+            <!-- Bot Submission -->
+            <div class="card fade-in mb-8">
+                <h2 id="botInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Submit Bot Discord</h2>
+                <input id="botTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Bot Title" />
+                <input id="botImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
+                <textarea id="botCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Bot Discord code here..."></textarea>
+                <div class="flex justify-end mt-4 space-x-4">
+                    <button id="submitBot" class="btn-primary text-white">Submit</button>
+                    <button id="cancelEditBot" class="btn-delete text-white hidden">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Bot List -->
+            <div id="botList" class="item-grid"></div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button id="prevPageBot" disabled>Previous</button>
+                <span id="pageInfoBot" class="text-blue-100 font-semibold"></span>
+                <button id="nextPageBot" disabled>Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
+        <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
+        <div class="mt-2 space-x-4">
+            <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
+            <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- Background Particles (CSS Animation) -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute w-4 h-4 bg-white rounded-full opacity-20 particle" style="top: 10%; left: 15%;"></div>
+        <div class="absolute w-6 h-6 bg-blue-200 rounded-full opacity-30 particle" style="top: 40%; right: 20%;"></div>
+        <div class="absolute w-3 h-3 bg-white rounded-full opacity-15 particle" style="bottom: 15%; left: 25%;"></div>
+        <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
+    </div>
+
+    <script>
+        // Check owner status
+        let isOwner = false;
+        const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
+        const OWNER_PASSWORD = "kien$$$dz2k10";
+
+        function checkOwner() {
+            const user = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
+                isOwner = true;
+            } else {
+                window.location.href = "index.html";
+            }
+        }
+
+        // Update navigation based on login status
+        function updateNav() {
+            const navMenu = document.getElementById('navMenu');
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (loggedInUser && loggedInUser.displayName) {
+                navMenu.innerHTML = `
+                    <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    ${isOwner ? `<a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Owner Settings</a>` : ''}
+                    <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
+                    <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
+                `;
+                const signOutBtn = document.getElementById('signOutBtn');
+                signOutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('loggedInUser');
+                    window.location.reload();
+                });
+            } else {
+                navMenu.innerHTML = `
+                    <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="signin.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
+                    <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
+                `;
+            }
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            const tabs = ['script', 'client', 'bot'];
+            tabs.forEach(tab => {
+                document.getElementById(`${tab}Tab`).classList.add('hidden');
+                document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.remove('active');
+            });
+            document.getElementById(`${tabName}Tab`).classList.remove('hidden');
+            document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active');
+            if (tabName === 'script') loadScripts();
+            if (tabName === 'client') loadClients();
+            if (tabName === 'bot') loadBots();
+        }
+
+        // Pagination state for each tab
+        let currentPage = { script: 1, client: 1, bot: 1 };
+        const itemsPerPage = 10;
+        let editIndex = { script: null, client: null, bot: null };
+
+        // Load and display scripts
+        function loadScripts() {
+            const scriptList = document.getElementById('scriptList');
+            const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+            const totalItems = scripts.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            const startIndex = (currentPage.script - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const paginatedScripts = scripts.slice(startIndex, endIndex);
+
+            const pageInfo = document.getElementById('pageInfoScript');
+            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage.script} of ${totalPages}` : 'Page 0 of 0';
+
+            const prevButton = document.getElementById('prevPageScript');
+            const nextButton = document.getElementById('nextPageScript');
+            prevButton.disabled = currentPage.script === 1;
+            nextButton.disabled = currentPage.script === totalPages || totalPages === 0;
+
+            if (paginatedScripts.length === 0) {
+                scriptList.innerHTML = '<p class="text-center text-blue-200">No scripts available yet.</p>';
+                return;
+            }
+
+            scriptList.innerHTML = '';
+            paginatedScripts.forEach((script, index) => {
+                const globalIndex = startIndex + index;
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.innerHTML = `
+                    ${script.imageBase64 ? `<img src="${script.imageBase64}" class="item-image" alt="${script.title} image" />` : ''}
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${script.title}</h3>
+                    <p class="text-blue-200 mb-4">A script for ${script.title.toLowerCase()} in Roblox games.</p>
+                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${script.code}</pre>
+                    <div class="flex justify-end space-x-2">
+                        <button class="btn-primary text-white copy-script" data-index="${globalIndex}">Copy Code</button>
+                        <button class="btn-edit text-white edit-script" data-index="${globalIndex}">Edit</button>
+                        <button class="btn-delete text-white delete-script" data-index="${globalIndex}">Delete</button>
+                    </div>
+                `;
+                scriptList.appendChild(card);
+            });
+
+            document.querySelectorAll('.copy-script').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    const script = scripts[index];
+                    navigator.clipboard.writeText(script.code).then(() => {
+                        alert('Script copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy script: ', err);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.edit-script').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    editIndex.script = index;
+                    const script = scripts[index];
+                    document.getElementById('scriptTitleInput').value = script.title;
+                    document.getElementById('scriptCodeInput').value = script.code;
+                    document.getElementById('scriptImageInput').value = '';
+                    document.getElementById('scriptInputTitle').textContent = 'Edit Script Hack';
+                    document.getElementById('submitScript').textContent = 'Save';
+                    document.getElementById('cancelEditScript').classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            document.querySelectorAll('.delete-script').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    if (confirm('Are you sure you want to delete this script?')) {
+                        const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+                        scripts.splice(index, 1);
+                        localStorage.setItem('scripts', JSON.stringify(scripts));
+                        currentPage.script = 1;
+                        loadScripts();
+                    }
+                });
+            });
+        }
+
+        // Load and display clients
+        function loadClients() {
+            const clientList = document.getElementById('clientList');
+            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+            const totalItems = clients.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            const startIndex = (currentPage.client - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const paginatedClients = clients.slice(startIndex, endIndex);
+
+            const pageInfo = document.getElementById('pageInfoClient');
+            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage.client} of ${totalPages}` : 'Page 0 of 0';
+
+            const prevButton = document.getElementById('prevPageClient');
+            const nextButton = document.getElementById('nextPageClient');
+            prevButton.disabled = currentPage.client === 1;
+            nextButton.disabled = currentPage.client === totalPages || totalPages === 0;
+
+            if (paginatedClients.length === 0) {
+                clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
+                return;
+            }
+
+            clientList.innerHTML = '';
+            paginatedClients.forEach((client, index) => {
+                const globalIndex = startIndex + index;
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.innerHTML = `
+                    ${client.imageBase64 ? `<img src="${client.imageBase64}" class="item-image" alt="${client.title} image" />` : ''}
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
+                    <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
+                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
+                    <div class="flex justify-end space-x-2">
+                        <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
+                        <button class="btn-edit text-white edit-client" data-index="${globalIndex}">Edit</button>
+                        <button class="btn-delete text-white delete-client" data-index="${globalIndex}">Delete</button>
+                    </div>
+                `;
+                clientList.appendChild(card);
+            });
+
+            document.querySelectorAll('.copy-client').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    const client = clients[index];
+                    navigator.clipboard.writeText(client.code).then(() => {
+                        alert('Client copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy client: ', err);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.edit-client').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    editIndex.client = index;
+                    const client = clients[index];
+                    document.getElementById('clientTitleInput').value = client.title;
+                    document.getElementById('clientCodeInput').value = client.code;
+                    document.getElementById('clientImageInput').value = '';
+                    document.getElementById('clientInputTitle').textContent = 'Edit Client Hack';
+                    document.getElementById('submitClient').textContent = 'Save';
+                    document.getElementById('cancelEditClient').classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            document.querySelectorAll('.delete-client').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    if (confirm('Are you sure you want to delete this client?')) {
+                        const clients = JSON.parse(localStorage.getItem('clients')) || [];
+                        clients.splice(index, 1);
+                        localStorage.setItem('clients', JSON.stringify(clients));
+                        currentPage.client = 1;
+                        loadClients();
+                    }
+                });
+            });
+        }
+
+        // Load and display bots
+        function loadBots() {
+            const botList = document.getElementById('botList');
+            const bots = JSON.parse(localStorage.getItem('bots')) || [];
+            const totalItems = bots.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            const startIndex = (currentPage.bot - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const paginatedBots = bots.slice(startIndex, endIndex);
+
+            const pageInfo = document.getElementById('pageInfoBot');
+            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage.bot} of ${totalPages}` : 'Page 0 of 0';
+
+            const prevButton = document.getElementById('prevPageBot');
+            const nextButton = document.getElementById('nextPageBot');
+            prevButton.disabled = currentPage.bot === 1;
+            nextButton.disabled = currentPage.bot === totalPages || totalPages === 0;
+
+            if (paginatedBots.length === 0) {
+                botList.innerHTML = '<p class="text-center text-blue-200">No bots available yet.</p>';
+                return;
+            }
+
+            botList.innerHTML = '';
+            paginatedBots.forEach((bot, index) => {
+                const globalIndex = startIndex + index;
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.innerHTML = `
+                    ${bot.imageBase64 ? `<img src="${bot.imageBase64}" class="item-image" alt="${bot.title} image" />` : ''}
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${bot.title}</h3>
+                    <p class="text-blue-200 mb-4">A Discord bot for ${bot.title.toLowerCase()} server management.</p>
+                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${bot.code}</pre>
+                    <div class="flex justify-end space-x-2">
+                        <button class="btn-primary text-white copy-bot" data-index="${globalIndex}">Copy Code</button>
+                        <button class="btn-edit text-white edit-bot" data-index="${globalIndex}">Edit</button>
+                        <button class="btn-delete text-white delete-bot" data-index="${globalIndex}">Delete</button>
+                    </div>
+                `;
+                botList.appendChild(card);
+            });
+
+            document.querySelectorAll('.copy-bot').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    const bot = bots[index];
+                    navigator.clipboard.writeText(bot.code).then(() => {
+                        alert('Bot copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy bot: ', err);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.edit-bot').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    editIndex.bot = index;
+                    const bot = bots[index];
+                    document.getElementById('botTitleInput').value = bot.title;
+                    document.getElementById('botCodeInput').value = bot.code;
+                    document.getElementById('botImageInput').value = '';
+                    document.getElementById('botInputTitle').textContent = 'Edit Bot Discord';
+                    document.getElementById('submitBot').textContent = 'Save';
+                    document.getElementById('cancelEditBot').classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            document.querySelectorAll('.delete-bot').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    if (confirm('Are you sure you want to delete this bot?')) {
+                        const bots = JSON.parse(localStorage.getItem('bots')) || [];
+                        bots.splice(index, 1);
+                        localStorage.setItem('bots', JSON.stringify(bots));
+                        currentPage.bot = 1;
+                        loadBots();
+                    }
+                });
+            });
+        }
+
+        // Load page
+        window.onload = function() {
+            updateNav();
+            checkOwner();
+            loadScripts();
+
+            // Pagination for scripts
+            document.getElementById('prevPageScript').addEventListener('click', () => {
+                if (currentPage.script > 1) {
+                    currentPage.script--;
+                    loadScripts();
+                }
+            });
+            document.getElementById('nextPageScript').addEventListener('click', () => {
+                const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+                const totalPages = Math.ceil(scripts.length / itemsPerPage);
+                if (currentPage.script < totalPages) {
+                    currentPage.script++;
+                    loadScripts();
+                }
+            });
+
+            // Pagination for clients
+            document.getElementById('prevPageClient').addEventListener('click', () => {
+                if (currentPage.client > 1) {
+                    currentPage.client--;
+                    loadClients();
+                }
+            });
+            document.getElementById('nextPageClient').addEventListener('click', () => {
+                const clients = JSON.parse(localStorage.getItem('clients')) || [];
+                const totalPages = Math.ceil(clients.length / itemsPerPage);
+                if (currentPage.client < totalPages) {
+                    currentPage.client++;
+                    loadClients();
+                }
+            });
+
+            // Pagination for bots
+            document.getElementById('prevPageBot').addEventListener('click', () => {
+                if (currentPage.bot > 1) {
+                    currentPage.bot--;
+                    loadBots();
+                }
+            });
+            document.getElementById('nextPageBot').addEventListener('click', () => {
+                const bots = JSON.parse(localStorage.getItem('bots')) || [];
+                const totalPages = Math.ceil(bots.length / itemsPerPage);
+                if (currentPage.bot < totalPages) {
+                    currentPage.bot++;
+                    loadBots();
+                }
+            });
+        };
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-menu');
+            menu.classList.toggle('active');
+        }
+
+        // Script submission/edit
+        const scriptTitleInput = document.getElementById('scriptTitleInput');
+        const scriptImageInput = document.getElementById('scriptImageInput');
+        const scriptCodeInput = document.getElementById('scriptCodeInput');
+        const submitScript = document.getElementById('submitScript');
+        const cancelEditScript = document.getElementById('cancelEditScript');
+
+        submitScript.addEventListener('click', () => {
+            const title = scriptTitleInput.value.trim();
+            const code = scriptCodeInput.value.trim();
+
+            if (!title || !code) {
+                alert("Please provide both a title and script code!");
+                return;
+            }
+
+            const file = scriptImageInput.files[0];
+            const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+
+            if (editIndex.script !== null) {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        scripts[editIndex.script] = { title, imageBase64, code };
+                        try {
+                            localStorage.setItem('scripts', JSON.stringify(scripts));
+                            resetForm('script');
+                            alert("Script updated successfully!");
+                            loadScripts();
+                        } catch (e) {
+                            alert("Failed to update script: localStorage might be full.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    scripts[editIndex.script] = { title, imageBase64: scripts[editIndex.script].imageBase64 || '', code };
+                    localStorage.setItem('scripts', JSON.stringify(scripts));
+                    resetForm('script');
+                    alert("Script updated successfully!");
+                    loadScripts();
+                }
+            } else {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        scripts.push({ title, imageBase64, code });
+                        try {
+                            localStorage.setItem('scripts', JSON.stringify(scripts));
+                            resetForm('script');
+                            alert("Script submitted successfully!");
+                            loadScripts();
+                        } catch (e) {
+                            alert("Failed to save script: localStorage might be full.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    scripts.push({ title, code });
+                    localStorage.setItem('scripts', JSON.stringify(scripts));
+                    resetForm('script');
+                    alert("Script submitted successfully!");
+                    loadScripts();
+                }
+            }
+        });
+
+        cancelEditScript.addEventListener('click', () => {
+            resetForm('script');
+        });
+
+        // Client submission/edit
+        const clientTitleInput = document.getElementById('clientTitleInput');
+        const clientImageInput = document.getElementById('clientImageInput');
+        const clientCodeInput = document.getElementById('clientCodeInput');
+        const submitClient = document.getElementById('submitClient');
+        const cancelEditClient = document.getElementById('cancelEditClient');
+
+        submitClient.addEventListener('click', () => {
+            const title = clientTitleInput.value.trim();
+            const code = clientCodeInput.value.trim();
+
+            if (!title || !code) {
+                alert("Please provide both a title and client code!");
+                return;
+            }
+
+            const file = clientImageInput.files[0];
+            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+
+            if (editIndex.client !== null) {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        clients[editIndex.client] = { title, imageBase64, code };
+                        try {
+                            localStorage.setItem('clients', JSON.stringify(clients));
+                            resetForm('client');
+                            alert("Client updated successfully!");
+                            loadClients();
+                        } catch (e) {
+                            alert("Failed to update client: localStorage might be full.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    clients[editIndex.client] = { title, imageBase64: clients[editIndex.client].imageBase64 || '', code };
+                    localStorage.setItem('clients', JSON.stringify(clients));
+                    resetForm('client');
+                    alert("Client updated successfully!");
+                    loadClients();
+                }
+            } else {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        clients.push({ title, imageBase64, code });
+                        try {
+                            localStorage.setItem('clients', JSON.stringify(clients));
+                            resetForm('client');
+                            alert("Client submitted successfully!");
+                            loadClients();
+                        } catch (e) {
+                            alert("Failed to save client: localStorage might be full.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    clients.push({ title, code });
+                    localStorage.setItem('clients', JSON.stringify(clients));
+                    resetForm('client');
+                    alert("Client submitted successfully!");
+                    loadClients();
+                }
+            }
+        });
+
+        cancelEditClient.addEventListener('click', () => {
+            resetForm('client');
+        });
+
+        // Bot submission/edit
+        const botTitleInput = document.getElementById('botTitleInput');
+        const botImageInput = document.getElementById('botImageInput');
+        const botCodeInput = document.getElementById('botCodeInput');
+        const submitBot = document.getElementById('submitBot');
+        const cancelEditBot = document.getElementById('cancelEditBot');
+
+        submitBot.addEventListener('click', () => {
+            const title = botTitleInput.value.trim();
+            const code = botCodeInput.value.trim();
+
+            if (!title || !code) {
+                alert("Please provide both a title and bot code!");
+                return;
+            }
+
+            const file = botImageInput.files[0];
+            const bots = JSON.parse(localStorage.getItem('bots')) || [];
+
+            if (editIndex.bot !== null) {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        bots[editIndex.bot] = { title, imageBase64, code };
+                        try {
+                            localStorage.setItem('bots', JSON.stringify(bots));
+                            resetForm('bot');
+                            alert("Bot updated successfully!");
+                            loadBots();
+                        } catch (e) {
+                            alert("Failed to update bot: localStorage might be full.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    bots[editIndex.bot] = { title, imageBase64: bots[editIndex.bot].imageBase64 || '', code };
+                    localStorage.setItem('bots', JSON.stringify(bots));
+                    resetForm('bot');
+                    alert("Bot updated successfully!");
+                    loadBots();
+                }
+            } else {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        bots.push({ title, imageBase64, code });
+                        try {
+                            localStorage.setItem('bots', JSON.stringify(bots));
+                            resetForm('bot');
+                            alert("Bot submitted successfully!");
+                            loadBots();
+                        } catch (e) {
+                            alert("Failed to save bot: localStorage might be full.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    bots.push({ title, code });
+                    localStorage.setItem('bots', JSON.stringify(bots));
+                    resetForm('bot');
+                    alert("Bot submitted successfully!");
+                    loadBots();
+                }
+            }
+        });
+
+        cancelEditBot.addEventListener('click', () => {
+            resetForm('bot');
+        });
+
+        // Reset form
+        function resetForm(type) {
+            if (type === 'script') {
+                scriptTitleInput.value = '';
+                scriptImageInput.value = '';
+                scriptCodeInput.value = '';
+                document.getElementById('scriptInputTitle').textContent = 'Submit Script Hack';
+                document.getElementById('submitScript').textContent = 'Submit';
+                document.getElementById('cancelEditScript').classList.add('hidden');
+                editIndex.script = null;
+                currentPage.script = 1;
+            } else if (type === 'client') {
+                clientTitleInput.value = '';
+                clientImageInput.value = '';
+                clientCodeInput.value = '';
+                document.getElementById('clientInputTitle').textContent = 'Submit Client Hack';
+                document.getElementById('submitClient').textContent = 'Submit';
+                document.getElementById('cancelEditClient').classList.add('hidden');
+                editIndex.client = null;
+                currentPage.client = 1;
+            } else if (type === 'bot') {
+                botTitleInput.value = '';
+                botImageInput.value = '';
+                botCodeInput.value = '';
+                document.getElementById('botInputTitle').textContent = 'Submit Bot Discord';
+                document.getElementById('submitBot').textContent = 'Submit';
+                document.getElementById('cancelEditBot').classList.add('hidden');
+                editIndex.bot = null;
+                currentPage.bot = 1;
+            }
+        }
+    </script>
+</body>
+</html>
