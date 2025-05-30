@@ -308,6 +308,7 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0 ${isOwner ? '' : 'hidden'}">Owner Settings</a>
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
@@ -386,11 +387,13 @@
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${script.code}</pre>
                     <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-script" data-index="${globalIndex}">Copy Code</button>
+                        ${isOwner ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-script" data-index="${globalIndex}">Delete</button>` : ''}
                     </div>
                 `;
                 scriptList.appendChild(card);
             });
 
+            // Copy functionality
             document.querySelectorAll('.copy-script').forEach(button => {
                 button.addEventListener('click', () => {
                     const index = parseInt(button.getAttribute('data-index'));
@@ -402,6 +405,20 @@
                     });
                 });
             });
+
+            // Delete functionality (only for owner)
+            if (isOwner) {
+                document.querySelectorAll('.delete-script').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const index = parseInt(button.getAttribute('data-index'));
+                        if (confirm(`Are you sure you want to delete "${scripts[index].title}"?`)) {
+                            scripts.splice(index, 1);
+                            localStorage.setItem('scripts', JSON.stringify(scripts));
+                            loadScripts(document.getElementById('sortOptions').value);
+                        }
+                    });
+                });
+            }
         }
 
         // Script submission
@@ -464,6 +481,7 @@
             document.getElementById('scriptList').classList.remove('hidden');
             document.querySelector('.pagination').classList.remove('hidden');
             currentPage = 1;
+            loadScripts(document.getElementById('sortOptions').value);
         }
 
         // Load page
