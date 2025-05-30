@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Home</title>
+    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -142,27 +142,29 @@
             </div>
         </nav>
 
-        <!-- Welcome Section -->
-        <div class="text-center mt-20 fade-in">
-            <h1 class="text-4xl md:text-5xl font-bold text-blue-100 mb-4">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
-            <p class="text-xl text-blue-200 mb-6">Chào mừng bạn đến với web Hack Game đỉnh cao!</p>
-            <a href="#explore" class="btn-primary text-white">Khám phá ngay</a>
+        <!-- Hero Section -->
+        <div class="text-center mb-12 fade-in">
+            <h1 class="text-5xl font-bold text-blue-100 drop-shadow-md">Welcome to [ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
+            <p class="text-lg text-blue-200 mt-4 max-w-2xl mx-auto">Explore our collection of powerful Roblox scripts, client hacks, and Discord bots designed for seamless integration and enhanced gaming experience.</p>
         </div>
 
         <!-- Features Section -->
-        <div id="explore" class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-            <a href="script-hack.html" class="card fade-in">
-                <h3 class="text-xl font-semibold text-blue-100 mb-2">Script Hack</h3>
-                <p class="text-blue-200">Script siêu xịn supports game Roblox.</p>
-            </a>
-            <a href="client-hack.html" class="card fade-in">
-                <h3 class="text-xl font-semibold text-blue-100 mb-2">Client Hack</h3>
-                <p class="text-blue-200">Client Hack siêu xịn chống ban wave.</p>
-            </a>
-            <a href="bot-discord.html" class="card fade-in">
-                <h3 class="text-xl font-semibold text-blue-100 mb-2">Bot Discord</h3>
-                <p class="text-blue-200">Bot Discord xịn hỗ trợ quản lý server.</p>
-            </a>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="card fade-in">
+                <h2 class="text-2xl font-semibold text-blue-100 mb-4">Script Hack</h2>
+                <p class="text-blue-200">Script siêu xịn supports game Roblox</p>
+                <a href="script-hack.html" class="btn-primary text-white inline-block mt-4">Explore Scripts</a>
+            </div>
+            <div class="card fade-in">
+                <h2 class="text-2xl font-semibold text-blue-100 mb-4">Client Hack</h2>
+                <p class="text-blue-200">Client Hack siêu xịn chống ban wave</p>
+                <a href="client-hack.html" class="btn-primary text-white inline-block mt-4">Discover Clients</a>
+            </div>
+            <div class="card fade-in">
+                <h2 class="text-2xl font-semibold text-blue-100 mb-4">Bot Discord</h2>
+                <p class="text-blue-200">Customizable Discord bots for server management and automation.</p>
+                <a href="bot-discord.html" class="btn-primary text-white inline-block mt-4">Get Bots</a>
+            </div>
         </div>
     </div>
 
@@ -174,7 +176,7 @@
 
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
-        <p class="text-blue-100 text-lg font-medium">@Website Made By Kiên💖</p>
+        <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
         <div class="mt-2 space-x-4">
             <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
             <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
@@ -205,6 +207,7 @@
                 const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
                 return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
             } catch (e) {
+                console.error('Decryption failed:', e);
                 return null;
             }
         }
@@ -225,6 +228,7 @@
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
                     localStorage.removeItem('loggedInUser');
+                    localStorage.removeItem('twoFactorCode');
                     window.location.reload();
                 });
             } else {
@@ -237,6 +241,12 @@
                     <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
             }
+        }
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-menu');
+            menu.classList.toggle('active');
         }
 
         // Dark mode toggle
@@ -266,16 +276,10 @@
             themeToggle.textContent = '☀️';
         }
 
-        // Load page and update navigation
+        // Load page
         window.onload = function() {
             updateNav();
         };
-
-        // Toggle mobile menu
-        function toggleMenu() {
-            const menu = document.querySelector('.nav-menu');
-            menu.classList.toggle('active');
-        }
     </script>
 </body>
 </html>
