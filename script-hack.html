@@ -96,6 +96,26 @@
         .btn-primary:hover {
             background: #5439cc;
         }
+        .btn-edit {
+            background: #f59e0b;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-edit:hover {
+            background: #d97706;
+        }
+        .btn-delete {
+            background: #ef4444;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+        }
         .script-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -154,12 +174,13 @@
 
         <!-- Script Submission (Owner Only) -->
         <div id="scriptInput" class="card fade-in hidden mb-8">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Submit Script Hack (Owner Only)</h2>
+            <h2 id="scriptInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Submit Script Hack (Owner Only)</h2>
             <input id="scriptTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Script Title" />
             <input id="scriptImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
             <textarea id="scriptCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Script Hack code here (Owner only)..."></textarea>
-            <div class="flex justify-end mt-4">
+            <div class="flex justify-end mt-4 space-x-4">
                 <button id="submitScript" class="btn-primary text-white">Submit</button>
+                <button id="cancelEdit" class="btn-delete text-white hidden">Cancel</button>
             </div>
         </div>
 
@@ -194,6 +215,7 @@
     <script>
         // Check owner status
         let isOwner = false;
+        let editIndex = null; // To track which script is being edited
         const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
         const OWNER_PASSWORD = "kien$$$dz2k10";
 
@@ -248,7 +270,7 @@
 
             // Calculate start and end index for the current page
             const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
             const paginatedScripts = scripts.slice(startIndex, endIndex);
 
             // Update page info
@@ -268,7 +290,7 @@
 
             scriptList.innerHTML = '';
             paginatedScripts.forEach((script, index) => {
-                const globalIndex = startIndex + index; // Calculate global index for copy functionality
+                const globalIndex = startIndex + index; // Calculate global index for copy/edit/delete functionality
                 const card = document.createElement('div');
                 card.className = 'card fade-in';
                 card.innerHTML = `
@@ -276,8 +298,12 @@
                     <h3 class="text-xl font-semibold text-blue-100 mb-2">${script.title}</h3>
                     <p class="text-blue-200 mb-4">A script for ${script.title.toLowerCase()} in Roblox games.</p>
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${script.code}</pre>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-script" data-index="${globalIndex}">Copy Code</button>
+                        ${isOwner ? `
+                            <button class="btn-edit text-white edit-script" data-index="${globalIndex}">Edit</button>
+                            <button class="btn-delete text-white delete-script" data-index="${globalIndex}">Delete</button>
+                        ` : ''}
                     </div>
                 `;
                 scriptList.appendChild(card);
@@ -295,6 +321,39 @@
                     });
                 });
             });
+
+            // Add edit functionality to buttons (only for owner)
+            if (isOwner) {
+                document.querySelectorAll('.edit-script').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const index = parseInt(button.getAttribute('data-index'));
+                        editIndex = index;
+                        const script = scripts[index];
+                        // Populate the form with existing data
+                        document.getElementById('scriptTitleInput').value = script.title;
+                        document.getElementById('scriptCodeInput').value = script.code;
+                        document.getElementById('scriptImageInput').value = ''; // File input cannot be pre-filled
+                        document.getElementById('scriptInputTitle').textContent = 'Edit Script Hack';
+                        document.getElementById('submitScript').textContent = 'Save';
+                        document.getElementById('cancelEdit').classList.remove('hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+
+                // Add delete functionality to buttons (only for owner)
+                document.querySelectorAll('.delete-script').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const index = parseInt(button.getAttribute('data-index'));
+                        if (confirm('Are you sure you want to delete this script?')) {
+                            const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+                            scripts.splice(index, 1);
+                            localStorage.setItem('scripts', JSON.stringify(scripts));
+                            currentPage = 1; // Reset to first page after deletion
+                            loadScripts();
+                        }
+                    });
+                });
+            }
         }
 
         // Load page
@@ -327,15 +386,16 @@
             menu.classList.toggle('active');
         }
 
-        // Code submission functionality
+        // Code submission/edit functionality
         const scriptTitleInput = document.getElementById('scriptTitleInput');
         const scriptImageInput = document.getElementById('scriptImageInput');
         const scriptCodeInput = document.getElementById('scriptCodeInput');
         const submitScript = document.getElementById('submitScript');
+        const cancelEdit = document.getElementById('cancelEdit');
 
         submitScript.addEventListener('click', () => {
             if (!isOwner) {
-                alert("Only the owner can submit content!");
+                alert("Only the owner can submit or edit content!");
                 return;
             }
 
@@ -348,42 +408,82 @@
             }
 
             const file = scriptImageInput.files[0];
-            if (file) {
-                // Convert image to Base64
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imageBase64 = event.target.result;
-                    const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
-                    scripts.push({ title, imageBase64, code });
-                    try {
-                        localStorage.setItem('scripts', JSON.stringify(scripts));
-                        scriptTitleInput.value = '';
-                        scriptImageInput.value = '';
-                        scriptCodeInput.value = '';
-                        currentPage = 1; // Reset to first page after submission
-                        alert("Script submitted successfully!");
-                        loadScripts();
-                    } catch (e) {
-                        alert("Failed to save script: localStorage might be full. Try removing some scripts or using smaller images.");
-                    }
-                };
-                reader.onerror = function() {
-                    alert("Failed to read the image file!");
-                };
-                reader.readAsDataURL(file);
+            const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+
+            if (editIndex !== null) {
+                // Edit existing script
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        scripts[editIndex] = { title, imageBase64, code };
+                        try {
+                            localStorage.setItem('scripts', JSON.stringify(scripts));
+                            resetForm();
+                            alert("Script updated successfully!");
+                            loadScripts();
+                        } catch (e) {
+                            alert("Failed to update script: localStorage might be full. Try removing some scripts or using smaller images.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Keep the existing image if no new image is uploaded
+                    scripts[editIndex] = { title, imageBase64: scripts[editIndex].imageBase64 || '', code };
+                    localStorage.setItem('scripts', JSON.stringify(scripts));
+                    resetForm();
+                    alert("Script updated successfully!");
+                    loadScripts();
+                }
             } else {
-                // No image uploaded
-                const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
-                scripts.push({ title, code });
-                localStorage.setItem('scripts', JSON.stringify(scripts));
-                scriptTitleInput.value = '';
-                scriptImageInput.value = '';
-                scriptCodeInput.value = '';
-                currentPage = 1; // Reset to first page after submission
-                alert("Script submitted successfully!");
-                loadScripts();
+                // Add new script
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        scripts.push({ title, imageBase64, code });
+                        try {
+                            localStorage.setItem('scripts', JSON.stringify(scripts));
+                            resetForm();
+                            alert("Script submitted successfully!");
+                            loadScripts();
+                        } catch (e) {
+                            alert("Failed to save script: localStorage might be full. Try removing some scripts or using smaller images.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    scripts.push({ title, code });
+                    localStorage.setItem('scripts', JSON.stringify(scripts));
+                    resetForm();
+                    alert("Script submitted successfully!");
+                    loadScripts();
+                }
             }
         });
+
+        // Cancel edit functionality
+        cancelEdit.addEventListener('click', () => {
+            resetForm();
+        });
+
+        // Reset form to initial state
+        function resetForm() {
+            scriptTitleInput.value = '';
+            scriptImageInput.value = '';
+            scriptCodeInput.value = '';
+            document.getElementById('scriptInputTitle').textContent = 'Submit Script Hack (Owner Only)';
+            document.getElementById('submitScript').textContent = 'Submit';
+            document.getElementById('cancelEdit').classList.add('hidden');
+            editIndex = null;
+            currentPage = 1; // Reset to first page after submission or cancel
+        }
     </script>
 </body>
 </html>
