@@ -69,7 +69,7 @@
                 transition: all 0.3s ease;
             }
             .nav-menu.active a, .nav-menu.active button {
-                font-size: 0.875rem; /* text-sm */
+                font-size: 0.875rem;
             }
         }
         .card {
@@ -169,6 +169,15 @@
             transform: scale(1.1);
             background: #db2777;
         }
+        /* Hide YouTube player but keep audio */
+        #youtube-audio {
+            position: fixed;
+            top: -1000px; /* Đẩy ra ngoài màn hình */
+            left: -1000px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white">
@@ -205,6 +214,9 @@
     <!-- Add Button (Visible only to owner) -->
     <div id="addButton" class="add-btn hidden" onclick="window.location.href='owner-settings.html#script'">+</div>
 
+    <!-- YouTube Audio (Hidden) -->
+    <iframe id="youtube-audio" src="https://www.youtube.com/embed/nmKdjNpgD3c?autoplay=1&loop=1&playlist=nmKdjNpgD3c&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
         <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
@@ -232,7 +244,7 @@
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
             if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
                 isOwner = true;
-                document.getElementById('addButton').classList.remove('hidden'); // Show add button for owner
+                document.getElementById('addButton').classList.remove('hidden');
             }
         }
 
@@ -278,16 +290,13 @@
             const totalItems = scripts.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            // Calculate start and end index for the current page
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
             const paginatedScripts = scripts.slice(startIndex, endIndex);
 
-            // Update page info
             const pageInfo = document.getElementById('pageInfo');
             pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
 
-            // Update button states
             const prevButton = document.getElementById('prevPage');
             const nextButton = document.getElementById('nextPage');
             prevButton.disabled = currentPage === 1;
@@ -319,7 +328,6 @@
                 scriptList.appendChild(card);
             });
 
-            // Add copy functionality to buttons
             document.querySelectorAll('.copy-script').forEach(button => {
                 button.addEventListener('click', () => {
                     const index = parseInt(button.getAttribute('data-index'));
@@ -332,7 +340,6 @@
                 });
             });
 
-            // Add delete functionality to buttons (only for owner)
             if (isOwner) {
                 document.querySelectorAll('.delete-script').forEach(button => {
                     button.addEventListener('click', () => {
@@ -349,13 +356,11 @@
             }
         }
 
-        // Load page
         window.onload = function() {
             updateNav();
             checkOwner();
             loadScripts();
 
-            // Add event listeners for pagination buttons
             document.getElementById('prevPage').addEventListener('click', () => {
                 if (currentPage > 1) {
                     currentPage--;
@@ -373,7 +378,6 @@
             });
         };
 
-        // Toggle mobile menu
         function toggleMenu() {
             const menu = document.querySelector('.nav-menu');
             menu.classList.toggle('active');
