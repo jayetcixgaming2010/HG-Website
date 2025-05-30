@@ -350,6 +350,18 @@
             if (tabName === 'script') loadScripts();
             if (tabName === 'client') loadClients();
             if (tabName === 'bot') loadBots();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Check URL hash and switch to corresponding tab
+        function checkHashAndShowTab() {
+            const hash = window.location.hash.substring(1); // Get the hash without the '#'
+            const validTabs = ['script', 'client', 'bot'];
+            if (hash && validTabs.includes(hash)) {
+                showTab(hash);
+            } else {
+                showTab('script'); // Default to script tab if no valid hash
+            }
         }
 
         // Pagination state for each tab
@@ -613,7 +625,7 @@
         window.onload = function() {
             updateNav();
             checkOwner();
-            loadScripts();
+            checkHashAndShowTab(); // Check hash and show the correct tab
 
             // Pagination for scripts
             document.getElementById('prevPageScript').addEventListener('click', () => {
