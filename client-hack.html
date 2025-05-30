@@ -7,6 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        html, body {
+            height: auto;
+            overflow-y: auto;
+        }
         .bg-animated {
             background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
             background-size: 400% 400%;
@@ -97,9 +101,38 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
+        .client-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background: #6b48ff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .pagination button:hover {
+            background: #5439cc;
+        }
+        .pagination button:disabled {
+            background: #4b3a99;
+            cursor: not-allowed;
+        }
     </style>
 </head>
-<body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
+<body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white">
     <div class="container mx-auto p-6 max-w-7xl relative z-10">
         <!-- Navigation -->
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
@@ -123,6 +156,7 @@
         <div id="clientInput" class="card fade-in hidden mb-8">
             <h2 class="text-2xl font-semibold mb-4 text-gray-200">Submit Client Hack (Owner Only)</h2>
             <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" />
+            <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
             <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here (Owner only)..."></textarea>
             <div class="flex justify-end mt-4">
                 <button id="submitClient" class="btn-primary text-white">Submit</button>
@@ -131,6 +165,13 @@
 
         <!-- Client List -->
         <div id="clientList" class="client-grid"></div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button id="prevPage" disabled>Previous</button>
+            <span id="pageInfo" class="text-blue-100 font-semibold"></span>
+            <button id="nextPage" disabled>Next</button>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -194,26 +235,49 @@
             }
         }
 
-        // Load and display clients
+        // Pagination state
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // Load and display clients with pagination
         function loadClients() {
             const clientList = document.getElementById('clientList');
             const clients = JSON.parse(localStorage.getItem('clients')) || [];
+            const totalItems = clients.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            if (clients.length === 0) {
+            // Calculate start and end index for the current page
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedClients = clients.slice(startIndex, endIndex);
+
+            // Update page info
+            const pageInfo = document.getElementById('pageInfo');
+            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
+
+            // Update button states
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages || totalPages === 0;
+
+            if (paginatedClients.length === 0) {
                 clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
                 return;
             }
 
             clientList.innerHTML = '';
-            clients.forEach((client, index) => {
+            paginatedClients.forEach((client, index) => {
+                const globalIndex = startIndex + index; // Calculate global index for copy functionality
                 const card = document.createElement('div');
                 card.className = 'card fade-in';
                 card.innerHTML = `
+                    ${client.imageBase64 ? `<img src="${client.imageBase64}" class="client-image" alt="${client.title} image" />` : ''}
                     <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
                     <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
                     <div class="flex justify-end">
-                        <button class="btn-primary text-white copy-client" data-index="${index}">Copy Code</button>
+                        <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
                     </div>
                 `;
                 clientList.appendChild(card);
@@ -222,7 +286,7 @@
             // Add copy functionality to buttons
             document.querySelectorAll('.copy-client').forEach(button => {
                 button.addEventListener('click', () => {
-                    const index = button.getAttribute('data-index');
+                    const index = parseInt(button.getAttribute('data-index'));
                     const client = clients[index];
                     navigator.clipboard.writeText(client.code).then(() => {
                         alert('Client copied to clipboard!');
@@ -238,6 +302,23 @@
             updateNav();
             checkOwner();
             loadClients();
+
+            // Add event listeners for pagination buttons
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadClients();
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const clients = JSON.parse(localStorage.getItem('clients')) || [];
+                const totalPages = Math.ceil(clients.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadClients();
+                }
+            });
         };
 
         // Toggle mobile menu
@@ -248,6 +329,7 @@
 
         // Code submission functionality
         const clientTitleInput = document.getElementById('clientTitleInput');
+        const clientImageInput = document.getElementById('clientImageInput');
         const clientCodeInput = document.getElementById('clientCodeInput');
         const submitClient = document.getElementById('submitClient');
 
@@ -265,14 +347,42 @@
                 return;
             }
 
-            const clients = JSON.parse(localStorage.getItem('clients')) || [];
-            clients.push({ title, code });
-            localStorage.setItem('clients', JSON.stringify(clients));
-
-            clientTitleInput.value = '';
-            clientCodeInput.value = '';
-            alert("Client submitted successfully!");
-            loadClients();
+            const file = clientImageInput.files[0];
+            if (file) {
+                // Convert image to Base64
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imageBase64 = event.target.result;
+                    const clients = JSON.parse(localStorage.getItem('clients')) || [];
+                    clients.push({ title, imageBase64, code });
+                    try {
+                        localStorage.setItem('clients', JSON.stringify(clients));
+                        clientTitleInput.value = '';
+                        clientImageInput.value = '';
+                        clientCodeInput.value = '';
+                        currentPage = 1; // Reset to first page after submission
+                        alert("Client submitted successfully!");
+                        loadClients();
+                    } catch (e) {
+                        alert("Failed to save client: localStorage might be full. Try removing some clients or using smaller images.");
+                    }
+                };
+                reader.onerror = function() {
+                    alert("Failed to read the image file!");
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // No image uploaded
+                const clients = JSON.parse(localStorage.getItem('clients')) || [];
+                clients.push({ title, code });
+                localStorage.setItem('clients', JSON.stringify(clients));
+                clientTitleInput.value = '';
+                clientImageInput.value = '';
+                clientCodeInput.value = '';
+                currentPage = 1; // Reset to first page after submission
+                alert("Client submitted successfully!");
+                loadClients();
+            }
         });
     </script>
 </body>
