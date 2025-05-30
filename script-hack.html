@@ -46,6 +46,7 @@
         }
         .nav-link:hover {
             transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.2);
         }
         @media (max-width: 640px) {
             .nav-menu {
@@ -70,6 +71,32 @@
                 height: 40vh !important;
             }
         }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background: #6b48ff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #5439cc;
+        }
+        .script-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
@@ -87,24 +114,23 @@
         </nav>
 
         <!-- Welcome Message -->
-        <div id="welcomeMessage" class="text-center mb-8 fade-in">
-            <p class="text-2xl font-medium text-blue-100 drop-shadow-md">Chào mừng bạn đến với Script Hack!</p>
+        <div class="text-center mb-8 fade-in">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Script Hack</h1>
+            <p class="text-lg text-blue-200 mt-2">Powerful scripts for Roblox games</p>
         </div>
 
-        <!-- Script Hack Content -->
-        <div id="scriptInput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in hidden">
+        <!-- Script Submission (Owner Only) -->
+        <div id="scriptInput" class="card fade-in hidden mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Submit Script Hack (Owner Only)</h2>
+            <input id="scriptTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Script Title" />
             <textarea id="scriptCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Script Hack code here (Owner only)..."></textarea>
             <div class="flex justify-end mt-4">
-                <button id="submitScript" class="bg-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-md">Submit</button>
+                <button id="submitScript" class="btn-primary text-white">Submit</button>
             </div>
         </div>
-        <div id="scriptOutput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg mt-6 fade-in">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Script Hack Content</h2>
-            <pre id="scriptContent" class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto"></pre>
-            <div class="flex justify-end mt-4">
-                <button id="copyScript" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition duration-300 shadow-md">Copy Code</button>
-            </div>
-        </div>
+
+        <!-- Script List -->
+        <div id="scriptList" class="script-grid"></div>
     </div>
 
     <!-- Footer -->
@@ -144,11 +170,11 @@
             const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
             if (loggedInUser && loggedInUser.displayName) {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
-                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
-                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
-                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    <a href="#" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
@@ -158,24 +184,60 @@
                 });
             } else {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
-                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
-                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
-                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    <a href="signin.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
-                    <a href="signup.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="signin.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
+                    <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
             }
         }
 
-        // Load saved content and check owner status
+        // Load and display scripts
+        function loadScripts() {
+            const scriptList = document.getElementById('scriptList');
+            const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+
+            if (scripts.length === 0) {
+                scriptList.innerHTML = '<p class="text-center text-blue-200">No scripts available yet.</p>';
+                return;
+            }
+
+            scriptList.innerHTML = '';
+            scripts.forEach((script, index) => {
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.innerHTML = `
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${script.title}</h3>
+                    <p class="text-blue-200 mb-4">A script for ${script.title.toLowerCase()} in Roblox games.</p>
+                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${script.code}</pre>
+                    <div class="flex justify-end">
+                        <button class="btn-primary text-white copy-script" data-index="${index}">Copy Code</button>
+                    </div>
+                `;
+                scriptList.appendChild(card);
+            });
+
+            // Add copy functionality to buttons
+            document.querySelectorAll('.copy-script').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = button.getAttribute('data-index');
+                    const script = scripts[index];
+                    navigator.clipboard.writeText(script.code).then(() => {
+                        alert('Script copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy script: ', err);
+                    });
+                });
+            });
+        }
+
+        // Load page
         window.onload = function() {
             updateNav();
             checkOwner();
-
-            // Load saved content
-            const scriptContent = localStorage.getItem('scriptContent') || "No content available yet.";
-            document.getElementById('scriptContent').textContent = scriptContent;
+            loadScripts();
         };
 
         // Toggle mobile menu
@@ -184,35 +246,33 @@
             menu.classList.toggle('active');
         }
 
-        // Code submission and copy functionality
-        const scriptInput = document.getElementById('scriptCodeInput');
-        const scriptOutput = document.getElementById('scriptOutput');
-        const scriptContent = document.getElementById('scriptContent');
+        // Code submission functionality
+        const scriptTitleInput = document.getElementById('scriptTitleInput');
+        const scriptCodeInput = document.getElementById('scriptCodeInput');
         const submitScript = document.getElementById('submitScript');
-        const copyScript = document.getElementById('copyScript');
 
         submitScript.addEventListener('click', () => {
             if (!isOwner) {
                 alert("Only the owner can submit content!");
                 return;
             }
-            const code = scriptInput.value.trim();
-            if (code) {
-                localStorage.setItem('scriptContent', code);
-                scriptContent.textContent = code;
-                scriptOutput.classList.remove('hidden');
-                scriptInput.value = '';
-                alert("Script submitted successfully!");
-            }
-        });
 
-        copyScript.addEventListener('click', () => {
-            const code = scriptContent.textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                alert('Script copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy script: ', err);
-            });
+            const title = scriptTitleInput.value.trim();
+            const code = scriptCodeInput.value.trim();
+
+            if (!title || !code) {
+                alert("Please provide both a title and script code!");
+                return;
+            }
+
+            const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+            scripts.push({ title, code });
+            localStorage.setItem('scripts', JSON.stringify(scripts));
+
+            scriptTitleInput.value = '';
+            scriptCodeInput.value = '';
+            alert("Script submitted successfully!");
+            loadScripts();
         });
     </script>
 </body>
