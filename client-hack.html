@@ -169,6 +169,15 @@
             transform: scale(1.1);
             background: #db2777;
         }
+        /* Hide YouTube player but keep audio */
+        #youtube-audio {
+            position: fixed;
+            top: -1000px;
+            left: -1000px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white">
@@ -204,6 +213,9 @@
 
     <!-- Add Button (Visible only to owner) -->
     <div id="addButton" class="add-btn hidden" onclick="window.location.href='owner-settings.html#client'">+</div>
+
+    <!-- YouTube Audio (Hidden) -->
+    <iframe id="youtube-audio" src="https://www.youtube.com/embed/nmKdjNpgD3c?autoplay=1&loop=1&playlist=nmKdjNpgD3c&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
 
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
