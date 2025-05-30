@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Client Hack</title>
+    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</title>
     <link rel="icon" type="image/png" href="logo1.png"> <!-- Favicon -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -74,9 +74,6 @@
             .nav-menu.active a, .nav-menu.active button {
                 font-size: 0.875rem;
             }
-            textarea {
-                height: 40vh !important;
-            }
         }
         .card {
             background: rgba(255, 255, 255, 0.1);
@@ -99,40 +96,6 @@
         }
         .btn-primary:hover {
             background: #5439cc;
-        }
-        .item-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .item-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .pagination button {
-            background: #6b48ff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            color: white;
-            font-weight: 600;
-            transition: background 0.3s ease;
-        }
-        .pagination button:hover {
-            background: #5439cc;
-        }
-        .pagination button:disabled {
-            background: #4b3a99;
-            cursor: not-allowed;
         }
         .dark-mode {
             background: #1a202c;
@@ -166,7 +129,7 @@
         <!-- Navigation -->
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center gap-3">
-                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
+                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-20 transition-transform hover:scale-110 duration-300 glow"> <!-- Tăng kích thước từ h-14 thành h-20 -->
                 <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
             <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
@@ -179,40 +142,28 @@
             </div>
         </nav>
 
-        <!-- Filter Section -->
-        <div class="flex justify-center mb-6">
-            <select id="sortOptions" class="p-2 rounded-lg bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="all">All</option>
-                <option value="title-asc">Title (A-Z)</option>
-                <option value="title-desc">Title (Z-A)</option>
-            </select>
-        </div>
-
         <!-- Welcome Message -->
         <div class="text-center mb-8 fade-in">
-            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Client Hack</h1>
-            <p class="text-lg text-blue-200 mt-2">Powerful clients for Roblox games</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Welcome to [ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
+            <p class="text-lg text-blue-200 mt-2">Explore our collection of powerful Roblox scripts, client hacks, and Discord bots designed for seamless integration and enhanced gaming experience.</p>
         </div>
 
-        <!-- Client List -->
-        <div id="clientList" class="item-grid"></div>
-
-        <!-- Pagination -->
-        <div class="pagination">
-            <button id="prevPageClient" disabled>Previous</button>
-            <span id="pageInfoClient" class="text-blue-100 font-semibold"></span>
-            <button id="nextPageClient" disabled>Next</button>
-        </div>
-
-        <!-- Client Submission Form (Hidden by Default) -->
-        <div id="clientSubmission" class="card fade-in mt-8 hidden">
-            <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Client</h2>
-            <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" required />
-            <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <input id="clientLinkInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Download Link" required />
-            <div class="flex justify-end mt-4 space-x-4">
-                <button id="submitClient" class="btn-primary text-white">Submit for Review</button>
-                <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
+        <!-- Features Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card fade-in">
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Script Hack</h3>
+                <p class="text-blue-200 mb-4">Script siêu xịn supports game Roblox</p>
+                <a href="script-hack.html" class="btn-primary text-white">Explore Scripts</a>
+            </div>
+            <div class="card fade-in">
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Client Hack</h3>
+                <p class="text-blue-200 mb-4">Client Hack siêu xịn chống ban wave</p>
+                <a href="client-hack.html" class="btn-primary text-white">Discover Clients</a>
+            </div>
+            <div class="card fade-in">
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Bot Discord</h3>
+                <p class="text-blue-200 mb-4">Customizable Discord bots for server management and automation.</p>
+                <a href="bot-discord.html" class="btn-primary text-white">Get Bots</a>
             </div>
         </div>
     </div>
@@ -225,7 +176,7 @@
 
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
-        <p class="text-blue-100 text-lg font-medium">@Website Made By Kiên💖</p>
+        <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
         <div class="mt-2 space-x-4">
             <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
             <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
@@ -245,11 +196,6 @@
         // Encryption key for localStorage
         const ENCRYPTION_KEY = "HGClientHack2025";
 
-        // Encrypt data before saving to localStorage
-        function encryptData(data) {
-            return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
-        }
-
         // Decrypt data from localStorage
         function decryptData(encryptedData) {
             try {
@@ -259,20 +205,6 @@
                 console.error("Decryption error:", e);
                 return null;
             }
-        }
-
-        // Check password status
-        let isAuthorized = false;
-        const CORRECT_PASSWORD = "kien$$$dz2k10";
-
-        function checkPassword() {
-            let storedPassword = localStorage.getItem('uploadPassword');
-            if (storedPassword) {
-                if (decryptData(storedPassword) === CORRECT_PASSWORD) {
-                    isAuthorized = true;
-                }
-            }
-            updateNav();
         }
 
         // Update navigation based on login status
@@ -285,7 +217,6 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0 ${isAuthorized ? '' : 'hidden'}" id="uploadLink">Upload</a>
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
@@ -293,22 +224,8 @@
                 signOutBtn.addEventListener('click', () => {
                     localStorage.removeItem('loggedInUser');
                     localStorage.removeItem('uploadPassword');
-                    isAuthorized = false;
                     window.location.href = "index.html";
                 });
-
-                const uploadLink = document.getElementById('uploadLink');
-                if (uploadLink) {
-                    uploadLink.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        promptForPassword();
-                        if (isAuthorized) {
-                            document.getElementById('clientList').classList.add('hidden');
-                            document.getElementById('clientSubmission').classList.remove('hidden');
-                            document.querySelector('.pagination').classList.add('hidden');
-                        }
-                    });
-                }
             } else {
                 navMenu.innerHTML = `
                     <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
@@ -321,212 +238,43 @@
             }
         }
 
-        // Password prompt for Upload access
-        function promptForPassword() {
-            if (!isAuthorized) {
-                const password = prompt("Please enter the password to access the Upload feature:");
-                if (password === CORRECT_PASSWORD) {
-                    localStorage.setItem('uploadPassword', encryptData(password));
-                    isAuthorized = true;
-                    alert("Password correct! You can now access the Upload feature.");
-                    checkPassword();
-                } else {
-                    alert("Incorrect password. You cannot access the Upload feature.");
-                }
-            }
-        }
-
-        // Pagination state
-        let currentPage = 1;
-        const itemsPerPage = 10;
-
-        // Load and display clients
-        function loadClients(sortOption = 'all') {
-            const clientList = document.getElementById('clientList');
-            let clients = JSON.parse(localStorage.getItem('clients')) || [];
-            
-            // Sort clients based on the selected option
-            if (sortOption === 'title-asc') {
-                clients.sort((a, b) => a.title.localeCompare(b.title));
-            } else if (sortOption === 'title-desc') {
-                clients.sort((a, b) => b.title.localeCompare(b.title));
-            }
-
-            const totalItems = clients.length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-            const paginatedClients = clients.slice(startIndex, endIndex);
-
-            const pageInfo = document.getElementById('pageInfoClient');
-            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
-
-            const prevButton = document.getElementById('prevPageClient');
-            const nextButton = document.getElementById('nextPageClient');
-            prevButton.disabled = currentPage === 1;
-            nextButton.disabled = currentPage === totalPages || totalPages === 0;
-
-            if (paginatedClients.length === 0) {
-                clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
-                return;
-            }
-
-            clientList.innerHTML = '';
-            paginatedClients.forEach((client, index) => {
-                const globalIndex = startIndex + index;
-                const card = document.createElement('div');
-                card.className = 'card fade-in';
-                card.innerHTML = `
-                    ${client.imageBase64 ? `<img src="${client.imageBase64}" class="item-image" alt="${client.title} image" />` : ''}
-                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
-                    <p class="text-blue-200 mb-4">A client for ${client.title.toLowerCase()} in Roblox games.</p>
-                    <a href="${client.link}" target="_blank" class="text-blue-200 hover:text-blue-400 transition duration-300">Download Link</a>
-                    <div class="flex justify-end space-x-2 mt-4">
-                        ${isAuthorized ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-client" data-index="${globalIndex}">Delete</button>` : ''}
-                    </div>
-                `;
-                clientList.appendChild(card);
-            });
-
-            // Delete functionality (only for authorized users)
-            if (isAuthorized) {
-                document.querySelectorAll('.delete-client').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const index = parseInt(button.getAttribute('data-index'));
-                        if (confirm(`Are you sure you want to delete "${clients[index].title}"?`)) {
-                            clients.splice(index, 1);
-                            localStorage.setItem('clients', JSON.stringify(clients));
-                            loadClients(document.getElementById('sortOptions').value);
-                        }
-                    });
-                });
-            }
-        }
-
-        // Client submission
-        const clientTitleInput = document.getElementById('clientTitleInput');
-        const clientImageInput = document.getElementById('clientImageInput');
-        const clientLinkInput = document.getElementById('clientLinkInput');
-        const submitClient = document.getElementById('submitClient');
-        const cancelSubmit = document.getElementById('cancelSubmit');
-        const clientSubmission = document.getElementById('clientSubmission');
-
-        submitClient.addEventListener('click', () => {
-            const title = clientTitleInput.value.trim();
-            const link = clientLinkInput.value.trim();
-
-            if (!title || !link) {
-                alert("Please provide both a title and download link!");
-                return;
-            }
-
-            const file = clientImageInput.files[0];
-            let clients = JSON.parse(localStorage.getItem('clients')) || [];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imageBase64 = event.target.result;
-                    clients.push({ title, imageBase64, link });
-                    try {
-                        localStorage.setItem('clients', JSON.stringify(clients));
-                        resetForm();
-                        alert("Client submitted successfully!");
-                        loadClients();
-                    } catch (e) {
-                        alert("Failed to save client: localStorage might be full.");
-                    }
-                };
-                reader.onerror = function() {
-                    alert("Failed to read the image file!");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                clients.push({ title, link });
-                localStorage.setItem('clients', JSON.stringify(clients));
-                resetForm();
-                alert("Client submitted successfully!");
-                loadClients();
-            }
-        });
-
-        cancelSubmit.addEventListener('click', () => {
-            resetForm();
-        });
-
-        // Reset form
-        function resetForm() {
-            clientTitleInput.value = '';
-            clientImageInput.value = '';
-            clientLinkInput.value = '';
-            clientSubmission.classList.add('hidden');
-            document.getElementById('clientList').classList.remove('hidden');
-            document.querySelector('.pagination').classList.remove('hidden');
-            currentPage = 1;
-            loadClients(document.getElementById('sortOptions').value);
-        }
-
         // Load page
         window.onload = function() {
-            checkPassword();
-            loadClients();
+            updateNav();
 
-            // Pagination
-            document.getElementById('prevPageClient').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    loadClients(document.getElementById('sortOptions').value);
-                }
-            });
-            document.getElementById('nextPageClient').addEventListener('click', () => {
-                const clients = JSON.parse(localStorage.getItem('clients')) || [];
-                const totalPages = Math.ceil(clients.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    loadClients(document.getElementById('sortOptions').value);
-                }
-            });
-
-            // Sort options
-            document.getElementById('sortOptions').addEventListener('change', (e) => {
-                currentPage = 1;
-                loadClients(e.target.value);
-            });
-        };
-
-        // Toggle mobile menu
-        function toggleMenu() {
-            const menu = document.querySelector('.nav-menu');
-            menu.classList.toggle('active');
-        }
-
-        // Dark mode toggle
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        });
-
-        // Music toggle
-        const musicToggle = document.getElementById('musicToggle');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        musicToggle.addEventListener('click', () => {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                musicToggle.textContent = '🔊';
-            } else {
-                backgroundMusic.pause();
-                musicToggle.textContent = '🔇';
+            // Toggle mobile menu
+            function toggleMenu() {
+                const menu = document.querySelector('.nav-menu');
+                menu.classList.toggle('active');
             }
-        });
 
-        // Load theme from localStorage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
+            // Dark mode toggle
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+                localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+
+            // Music toggle
+            const musicToggle = document.getElementById('musicToggle');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            musicToggle.addEventListener('click', () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicToggle.textContent = '🔊';
+                } else {
+                    backgroundMusic.pause();
+                    musicToggle.textContent = '🔇';
+                }
+            });
+
+            // Load theme from localStorage
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+        };
     </script>
 </body>
 </html>
