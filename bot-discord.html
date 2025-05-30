@@ -169,14 +169,9 @@
             transform: scale(1.1);
             background: #db2777;
         }
-        /* Hide YouTube player but keep audio */
-        #youtube-audio {
-            position: fixed;
-            top: -1000px;
-            left: -1000px;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
+        /* Hide the audio player */
+        #backgroundMusic {
+            display: none;
         }
     </style>
 </head>
@@ -214,8 +209,11 @@
     <!-- Add Button (Visible only to owner) -->
     <div id="addButton" class="add-btn hidden" onclick="window.location.href='owner-settings.html#bot'">+</div>
 
-    <!-- YouTube Audio (Hidden) -->
-    <iframe id="youtube-audio" src="https://www.youtube.com/embed/nmKdjNpgD3c?autoplay=1&loop=1&playlist=nmKdjNpgD3c&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+    <!-- Audio Element (Hidden) -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="background-music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
