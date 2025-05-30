@@ -267,10 +267,18 @@
 
         function checkOwner() {
             const user = decryptData(localStorage.getItem('loggedInUser'));
-            if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
-                isOwner = true;
+            if (user) {
+                console.log("User data from localStorage:", user); // Debug log
+                if (user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
+                    isOwner = true;
+                    console.log("User is owner:", isOwner); // Debug log
+                } else {
+                    isOwner = false;
+                    console.log("User is not owner:", isOwner); // Debug log
+                }
             } else {
                 isOwner = false;
+                console.log("No user data found in localStorage, isOwner set to:", isOwner); // Debug log
             }
             updateNav();
         }
@@ -285,7 +293,7 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    ${isOwner ? `<a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Owner Settings</a>` : ''}
+                    ${isOwner ? `<a href="#" id="uploadNavLink" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Upload</a>` : ''}
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
@@ -448,7 +456,6 @@
 
         // Load page
         window.onload = function() {
-            updateNav();
             checkOwner();
             loadClients();
 
