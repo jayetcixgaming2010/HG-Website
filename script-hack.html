@@ -255,7 +255,7 @@
         <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
-    <!-- Add Button (For Owner) -->
+    <!-- Add Button (Chỉ hiển thị cho owner) -->
     <button id="addButton" class="btn-add text-white hidden">+</button>
 
     <script>
@@ -285,14 +285,19 @@
 
         function checkOwner() {
             const user = decryptData(localStorage.getItem('loggedInUser'));
+            console.log("User from localStorage:", user);
             if (user) {
+                console.log("User email:", user.email, "User password:", user.password);
                 if (user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
                     isOwner = true;
+                    alert("You are logged in as the owner! The 'Add' button should be visible.");
                 } else {
                     isOwner = false;
+                    alert("You are not the owner. Please log in with email: " + OWNER_EMAIL + " and password: " + OWNER_PASSWORD);
                 }
             } else {
                 isOwner = false;
+                alert("No user is logged in. Please log in with email: " + OWNER_EMAIL + " and password: " + OWNER_PASSWORD);
             }
             updateNav();
             updateAddButton();
@@ -334,8 +339,10 @@
             const addButton = document.getElementById('addButton');
             if (isOwner) {
                 addButton.classList.remove('hidden');
+                console.log("Add button is now visible because isOwner is true.");
             } else {
                 addButton.classList.add('hidden');
+                console.log("Add button is hidden because isOwner is false.");
             }
         }
 
