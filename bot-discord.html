@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Client Hack</title>
+    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Bot Discord</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -184,7 +184,7 @@
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center gap-3">
                 <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
-                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 �(C𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
             <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
                 <!-- Menu sẽ được cập nhật động bằng JavaScript -->
@@ -207,31 +207,31 @@
 
         <!-- Welcome Message -->
         <div class="text-center mb-8 fade-in">
-            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Client Hack</h1>
-            <p class="text-lg text-blue-200 mt-2">Secure client hacks with anti-ban protection</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Bot Discord</h1>
+            <p class="text-lg text-blue-200 mt-2">Custom Discord bots for server management</p>
         </div>
 
-        <!-- Client List -->
-        <div id="clientList" class="item-grid"></div>
+        <!-- Bot List -->
+        <div id="botList" class="item-grid"></div>
 
         <!-- Pagination -->
         <div class="pagination">
-            <button id="prevPageClient" disabled>Previous</button>
-            <span id="pageInfoClient" class="text-blue-100 font-semibold"></span>
-            <button id="nextPageClient" disabled>Next</button>
+            <button id="prevPageBot" disabled>Previous</button>
+            <span id="pageInfoBot" class="text-blue-100 font-semibold"></span>
+            <button id="nextPageBot" disabled>Next</button>
         </div>
 
         <!-- Upload Button (Only for Owner) -->
         <div id="uploadButton" class="btn-upload hidden">+</div>
 
-        <!-- Client Submission Form -->
-        <div id="clientSubmission" class="card fade-in mt-8 hidden">
-            <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Client</h2>
-            <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" />
-            <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here..."></textarea>
+        <!-- Bot Submission Form -->
+        <div id="botSubmission" class="card fade-in mt-8 hidden">
+            <h2 id="botInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Bot</h2>
+            <input id="botTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Bot Title" />
+            <input id="botImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
+            <textarea id="botCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Bot Discord code here..."></textarea>
             <div class="flex justify-end mt-4 space-x-4">
-                <button id="submitClient" class="btn-primary text-white">Submit for Review</button>
+                <button id="submitBot" class="btn-primary text-white">Submit for Review</button>
                 <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
             </div>
         </div>
@@ -328,194 +328,69 @@
         let currentPage = 1;
         const itemsPerPage = 10;
 
-        // Load and display clients
-        function loadClients(sortOption = 'all') {
-            const clientList = document.getElementById('clientList');
-            let clients = JSON.parse(localStorage.getItem('clients')) || [];
+        // Load and display bots
+        function loadBots(sortOption = 'all') {
+            const botList = document.getElementById('botList');
+            let bots = JSON.parse(localStorage.getItem('bots')) || [];
             
-            // Sort clients based on the selected option
+            // Sort bots based on the selected option
             if (sortOption === 'title-asc') {
-                clients.sort((a, b) => a.title.localeCompare(b.title));
+                bots.sort((a, b) => a.title.localeCompare(b.title));
             } else if (sortOption === 'title-desc') {
-                clients.sort((a, b) => b.title.localeCompare(a.title));
+                bots.sort((a, b) => b.title.localeCompare(a.title));
             }
 
-            const totalItems = clients.length;
+            const totalItems = bots.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage);
 
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-            const paginatedClients = clients.slice(startIndex, endIndex);
+            const paginatedBots = bots.slice(startIndex, endIndex);
 
-            const pageInfo = document.getElementById('pageInfoClient');
+            const pageInfo = document.getElementById('pageInfoBot');
             pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
 
-            const prevButton = document.getElementById('prevPageClient');
-            const nextButton = document.getElementById('nextPageClient');
+            const prevButton = document.getElementById('prevPageBot');
+            const nextButton = document.getElementById('nextPageBot');
             prevButton.disabled = currentPage === 1;
             nextButton.disabled = currentPage === totalPages || totalPages === 0;
 
-            if (paginatedClients.length === 0) {
-                clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
+            if (paginatedBots.length === 0) {
+                botList.innerHTML = '<p class="text-center text-blue-200">No bots available yet.</p>';
                 return;
             }
 
-            clientList.innerHTML = '';
-            paginatedClients.forEach((client, index) => {
+            botList.innerHTML = '';
+            paginatedBots.forEach((bot, index) => {
                 const globalIndex = startIndex + index;
                 const card = document.createElement('div');
                 card.className = 'card fade-in';
                 card.innerHTML = `
-                    ${client.imageBase64 ? `<img src="${client.imageBase64}" class="item-image" alt="${client.title} image" />` : ''}
-                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
-                    <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
-                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
+                    ${bot.imageBase64 ? `<img src="${bot.imageBase64}" class="item-image" alt="${bot.title} image" />` : ''}
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${bot.title}</h3>
+                    <p class="text-blue-200 mb-4">A Discord bot for ${bot.title.toLowerCase()} server management.</p>
+                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${bot.code}</pre>
                     <div class="flex justify-end space-x-2">
-                        <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
+                        <button class="btn-primary text-white copy-bot" data-index="${globalIndex}">Copy Code</button>
                     </div>
                 `;
-                clientList.appendChild(card);
+                botList.appendChild(card);
             });
 
-            document.querySelectorAll('.copy-client').forEach(button => {
+            document.querySelectorAll('.copy-bot').forEach(button => {
                 button.addEventListener('click', () => {
                     const index = parseInt(button.getAttribute('data-index'));
-                    const client = clients[index];
-                    navigator.clipboard.writeText(client.code).then(() => {
-                        alert('Client copied to clipboard!');
+                    const bot = bots[index];
+                    navigator.clipboard.writeText(bot.code).then(() => {
+                        alert('Bot copied to clipboard!');
                     }).catch(err => {
-                        console.error('Failed to copy client: ', err);
+                        console.error('Failed to copy bot: ', err);
                     });
                 });
             });
         }
 
-        // Client submission
-        const clientTitleInput = document.getElementById('clientTitleInput');
-        const clientImageInput = document.getElementById('clientImageInput');
-        const clientCodeInput = document.getElementById('clientCodeInput');
-        const submitClient = document.getElementById('submitClient');
-        const cancelSubmit = document.getElementById('cancelSubmit');
-        const uploadButton = document.getElementById('uploadButton');
-        const clientSubmission = document.getElementById('clientSubmission');
-
-        uploadButton.addEventListener('click', () => {
-            clientSubmission.classList.toggle('hidden');
-        });
-
-        submitClient.addEventListener('click', () => {
-            const title = clientTitleInput.value.trim();
-            const code = clientCodeInput.value.trim();
-
-            if (!title || !code) {
-                alert("Please provide both a title and client code!");
-                return;
-            }
-
-            const file = clientImageInput.files[0];
-            const clients = JSON.parse(localStorage.getItem('clients')) || [];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imageBase64 = event.target.result;
-                    clients.push({ title, imageBase64, code });
-                    try {
-                        localStorage.setItem('clients', JSON.stringify(clients));
-                        resetForm();
-                        alert("Client submitted successfully!");
-                        loadClients();
-                    } catch (e) {
-                        alert("Failed to save client: localStorage might be full.");
-                    }
-                };
-                reader.onerror = function() {
-                    alert("Failed to read the image file!");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                clients.push({ title, code });
-                localStorage.setItem('clients', JSON.stringify(clients));
-                resetForm();
-                alert("Client submitted successfully!");
-                loadClients();
-            }
-        });
-
-        cancelSubmit.addEventListener('click', () => {
-            resetForm();
-        });
-
-        // Reset form
-        function resetForm() {
-            clientTitleInput.value = '';
-            clientImageInput.value = '';
-            clientCodeInput.value = '';
-            clientSubmission.classList.add('hidden');
-            currentPage = 1;
-        }
-
-        // Load page
-        window.onload = function() {
-            updateNav();
-            checkOwner();
-            loadClients();
-
-            // Pagination
-            document.getElementById('prevPageClient').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    loadClients(document.getElementById('sortOptions').value);
-                }
-            });
-            document.getElementById('nextPageClient').addEventListener('click', () => {
-                const clients = JSON.parse(localStorage.getItem('clients')) || [];
-                const totalPages = Math.ceil(clients.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    loadClients(document.getElementById('sortOptions').value);
-                }
-            });
-
-            // Sort options
-            document.getElementById('sortOptions').addEventListener('change', (e) => {
-                currentPage = 1;
-                loadClients(e.target.value);
-            });
-        };
-
-        // Toggle mobile menu
-        function toggleMenu() {
-            const menu = document.querySelector('.nav-menu');
-            menu.classList.toggle('active');
-        }
-
-        // Dark mode toggle
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        });
-
-        // Music toggle
-        const musicToggle = document.getElementById('musicToggle');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        musicToggle.addEventListener('click', () => {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                musicToggle.textContent = '🔊';
-            } else {
-                backgroundMusic.pause();
-                musicToggle.textContent = '🔇';
-            }
-        });
-
-        // Load theme from localStorage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
-    </script>
-</body>
-</html>
+        // Bot submission
+        const botTitleInput = document.getElementById('botTitleInput');
+        const botImageInput = document.getElementById('botImageInput');
+        const botCodeInput = document.getElementById('botCodeInput');
