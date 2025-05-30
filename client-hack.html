@@ -46,6 +46,7 @@
         }
         .nav-link:hover {
             transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.2);
         }
         @media (max-width: 640px) {
             .nav-menu {
@@ -70,6 +71,32 @@
                 height: 40vh !important;
             }
         }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background: #6b48ff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #5439cc;
+        }
+        .client-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white overflow-hidden">
@@ -77,7 +104,7 @@
         <!-- Navigation -->
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center gap-3">
-                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐮𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
+                <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
                 <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
             <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
@@ -87,24 +114,23 @@
         </nav>
 
         <!-- Welcome Message -->
-        <div id="welcomeMessage" class="text-center mb-8 fade-in">
-            <p class="text-2xl font-medium text-blue-100 drop-shadow-md">Chào mừng bạn đến với Client Hack!</p>
+        <div class="text-center mb-8 fade-in">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Client Hack</h1>
+            <p class="text-lg text-blue-200 mt-2">Secure client hacks with anti-ban protection</p>
         </div>
 
-        <!-- Client Hack Content -->
-        <div id="clientInput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg fade-in hidden">
+        <!-- Client Submission (Owner Only) -->
+        <div id="clientInput" class="card fade-in hidden mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Submit Client Hack (Owner Only)</h2>
+            <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" />
             <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here (Owner only)..."></textarea>
             <div class="flex justify-end mt-4">
-                <button id="submitClient" class="bg-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-md">Submit</button>
+                <button id="submitClient" class="btn-primary text-white">Submit</button>
             </div>
         </div>
-        <div id="clientOutput" class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-md shadow-lg mt-6 fade-in">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Client Hack Content</h2>
-            <pre id="clientContent" class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto"></pre>
-            <div class="flex justify-end mt-4">
-                <button id="copyClient" class="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition duration-300 shadow-md">Copy Code</button>
-            </div>
-        </div>
+
+        <!-- Client List -->
+        <div id="clientList" class="client-grid"></div>
     </div>
 
     <!-- Footer -->
@@ -127,8 +153,8 @@
     <script>
         // Check owner status
         let isOwner = false;
-        const OWNER_EMAIL = "owner@hgclienthack.com"; // Thay bằng email owner thật
-        const OWNER_PASSWORD = "owner123"; // Thay bằng mật khẩu owner thật
+        const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
+        const OWNER_PASSWORD = "kien$$$dz2k10";
 
         function checkOwner() {
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
@@ -144,11 +170,11 @@
             const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
             if (loggedInUser && loggedInUser.displayName) {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
-                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
-                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
-                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    <a href="#" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
@@ -158,24 +184,60 @@
                 });
             } else {
                 navMenu.innerHTML = `
-                    <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
-                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
-                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
-                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    <a href="signin.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
-                    <a href="signup.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
+                    <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
+                    <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
+                    <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
+                    <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
+                    <a href="signin.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
+                    <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
             }
         }
 
-        // Load saved content and check owner status
+        // Load and display clients
+        function loadClients() {
+            const clientList = document.getElementById('clientList');
+            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+
+            if (clients.length === 0) {
+                clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
+                return;
+            }
+
+            clientList.innerHTML = '';
+            clients.forEach((client, index) => {
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.innerHTML = `
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
+                    <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
+                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
+                    <div class="flex justify-end">
+                        <button class="btn-primary text-white copy-client" data-index="${index}">Copy Code</button>
+                    </div>
+                `;
+                clientList.appendChild(card);
+            });
+
+            // Add copy functionality to buttons
+            document.querySelectorAll('.copy-client').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = button.getAttribute('data-index');
+                    const client = clients[index];
+                    navigator.clipboard.writeText(client.code).then(() => {
+                        alert('Client copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy client: ', err);
+                    });
+                });
+            });
+        }
+
+        // Load page
         window.onload = function() {
             updateNav();
             checkOwner();
-
-            // Load saved content
-            const clientContent = localStorage.getItem('clientContent') || "No content available yet.";
-            document.getElementById('clientContent').textContent = clientContent;
+            loadClients();
         };
 
         // Toggle mobile menu
@@ -184,35 +246,33 @@
             menu.classList.toggle('active');
         }
 
-        // Code submission and copy functionality
-        const clientInput = document.getElementById('clientCodeInput');
-        const clientOutput = document.getElementById('clientOutput');
-        const clientContent = document.getElementById('clientContent');
+        // Code submission functionality
+        const clientTitleInput = document.getElementById('clientTitleInput');
+        const clientCodeInput = document.getElementById('clientCodeInput');
         const submitClient = document.getElementById('submitClient');
-        const copyClient = document.getElementById('copyClient');
 
         submitClient.addEventListener('click', () => {
             if (!isOwner) {
                 alert("Only the owner can submit content!");
                 return;
             }
-            const code = clientInput.value.trim();
-            if (code) {
-                localStorage.setItem('clientContent', code);
-                clientContent.textContent = code;
-                clientOutput.classList.remove('hidden');
-                clientInput.value = '';
-                alert("Client submitted successfully!");
-            }
-        });
 
-        copyClient.addEventListener('click', () => {
-            const code = clientContent.textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                alert('Client copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy client: ', err);
-            });
+            const title = clientTitleInput.value.trim();
+            const code = clientCodeInput.value.trim();
+
+            if (!title || !code) {
+                alert("Please provide both a title and client code!");
+                return;
+            }
+
+            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+            clients.push({ title, code });
+            localStorage.setItem('clients', JSON.stringify(clients));
+
+            clientTitleInput.value = '';
+            clientCodeInput.value = '';
+            alert("Client submitted successfully!");
+            loadClients();
         });
     </script>
 </body>
