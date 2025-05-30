@@ -99,24 +99,6 @@
         .btn-primary:hover {
             background: #5439cc;
         }
-        .btn-upload {
-            background: #ec4899;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .btn-upload:hover {
-            transform: scale(1.1);
-        }
         .item-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -184,7 +166,7 @@
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center gap-3">
                 <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
-                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 �(C𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
             <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
                 <!-- Menu sẽ được cập nhật động bằng JavaScript -->
@@ -208,7 +190,7 @@
         <!-- Welcome Message -->
         <div class="text-center mb-8 fade-in">
             <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Client Hack</h1>
-            <p class="text-lg text-blue-200 mt-2">Secure client hacks with anti-ban protection</p>
+            <p class="text-lg text-blue-200 mt-2">Powerful clients for Roblox games</p>
         </div>
 
         <!-- Client List -->
@@ -221,15 +203,12 @@
             <button id="nextPageClient" disabled>Next</button>
         </div>
 
-        <!-- Upload Button (Only for Owner) -->
-        <div id="uploadButton" class="btn-upload hidden">+</div>
-
-        <!-- Client Submission Form -->
+        <!-- Client Submission Form (Hidden by Default) -->
         <div id="clientSubmission" class="card fade-in mt-8 hidden">
             <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Client</h2>
-            <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" />
+            <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" required />
             <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here..."></textarea>
+            <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here..." required></textarea>
             <div class="flex justify-end mt-4 space-x-4">
                 <button id="submitClient" class="btn-primary text-white">Submit for Review</button>
                 <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
@@ -276,6 +255,7 @@
                 const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
                 return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
             } catch (e) {
+                console.error("Decryption error:", e);
                 return null;
             }
         }
@@ -289,8 +269,10 @@
             const user = decryptData(localStorage.getItem('loggedInUser'));
             if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
                 isOwner = true;
-                document.getElementById('uploadButton').classList.remove('hidden');
+            } else {
+                isOwner = false;
             }
+            updateNav();
         }
 
         // Update navigation based on login status
@@ -320,7 +302,19 @@
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
                     <a href="signin.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
                     <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
+                    ${isOwner ? `<a href="#" id="uploadNavLink" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Upload</a>` : ''}
                 `;
+            }
+
+            // Add event listener for Upload link
+            const uploadNavLink = document.getElementById('uploadNavLink');
+            if (uploadNavLink) {
+                uploadNavLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('clientList').classList.add('hidden');
+                    document.getElementById('clientSubmission').classList.remove('hidden');
+                    document.querySelector('.pagination').classList.add('hidden');
+                });
             }
         }
 
@@ -368,7 +362,7 @@
                 card.innerHTML = `
                     ${client.imageBase64 ? `<img src="${client.imageBase64}" class="item-image" alt="${client.title} image" />` : ''}
                     <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
-                    <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
+                    <p class="text-blue-200 mb-4">A client for ${client.title.toLowerCase()} in Roblox games.</p>
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
                     <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
@@ -382,7 +376,7 @@
                     const index = parseInt(button.getAttribute('data-index'));
                     const client = clients[index];
                     navigator.clipboard.writeText(client.code).then(() => {
-                        alert('Client copied to clipboard!');
+                        alert('Client code copied to clipboard!');
                     }).catch(err => {
                         console.error('Failed to copy client: ', err);
                     });
@@ -396,12 +390,7 @@
         const clientCodeInput = document.getElementById('clientCodeInput');
         const submitClient = document.getElementById('submitClient');
         const cancelSubmit = document.getElementById('cancelSubmit');
-        const uploadButton = document.getElementById('uploadButton');
         const clientSubmission = document.getElementById('clientSubmission');
-
-        uploadButton.addEventListener('click', () => {
-            clientSubmission.classList.toggle('hidden');
-        });
 
         submitClient.addEventListener('click', () => {
             const title = clientTitleInput.value.trim();
@@ -413,7 +402,7 @@
             }
 
             const file = clientImageInput.files[0];
-            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+            let clients = JSON.parse(localStorage.getItem('clients')) || [];
 
             if (file) {
                 const reader = new FileReader();
@@ -452,6 +441,8 @@
             clientImageInput.value = '';
             clientCodeInput.value = '';
             clientSubmission.classList.add('hidden');
+            document.getElementById('clientList').classList.remove('hidden');
+            document.querySelector('.pagination').classList.remove('hidden');
             currentPage = 1;
         }
 
