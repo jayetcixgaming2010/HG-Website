@@ -96,7 +96,6 @@
         .btn-primary:hover {
             background: #5439cc;
         }
-        /* Dark mode styles */
         .dark-mode {
             background: #1a202c;
             color: #e2e8f0;
@@ -142,28 +141,28 @@
             </div>
         </nav>
 
-        <!-- Hero Section -->
-        <div class="text-center mb-12 fade-in">
-            <h1 class="text-5xl font-bold text-blue-100 drop-shadow-md">Welcome to [ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</h1>
-            <p class="text-lg text-blue-200 mt-4 max-w-2xl mx-auto">Explore our collection of powerful Roblox scripts, client hacks, and Discord bots designed for seamless integration and enhanced gaming experience.</p>
+        <!-- Welcome Message -->
+        <div class="text-center mb-8 fade-in">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Welcome to HG Client Hack</h1>
+            <p class="text-lg text-blue-200 mt-2">Explore scripts, clients, and Discord bots for Roblox games</p>
         </div>
 
         <!-- Features Section -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="card fade-in">
-                <h2 class="text-2xl font-semibold text-blue-100 mb-4">Script Hack</h2>
-                <p class="text-blue-200">Script siêu xịn supports game Roblox</p>
-                <a href="script-hack.html" class="btn-primary text-white inline-block mt-4">Explore Scripts</a>
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Script Hack</h3>
+                <p class="text-blue-200 mb-4">Powerful scripts for Roblox games to enhance your gameplay.</p>
+                <a href="script-hack.html" class="btn-primary text-white">Explore Scripts</a>
             </div>
             <div class="card fade-in">
-                <h2 class="text-2xl font-semibold text-blue-100 mb-4">Client Hack</h2>
-                <p class="text-blue-200">Client Hack siêu xịn chống ban wave</p>
-                <a href="client-hack.html" class="btn-primary text-white inline-block mt-4">Discover Clients</a>
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Client Hack</h3>
+                <p class="text-blue-200 mb-4">Custom clients for Roblox with advanced features.</p>
+                <a href="client-hack.html" class="btn-primary text-white">Explore Clients</a>
             </div>
             <div class="card fade-in">
-                <h2 class="text-2xl font-semibold text-blue-100 mb-4">Bot Discord</h2>
-                <p class="text-blue-200">Customizable Discord bots for server management and automation.</p>
-                <a href="bot-discord.html" class="btn-primary text-white inline-block mt-4">Get Bots</a>
+                <h3 class="text-xl font-semibold text-blue-100 mb-2">Bot Discord</h3>
+                <p class="text-blue-200 mb-4">Useful Discord bots to manage your server.</p>
+                <a href="bot-discord.html" class="btn-primary text-white">Explore Bots</a>
             </div>
         </div>
     </div>
@@ -176,7 +175,7 @@
 
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
-        <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
+        <p class="text-blue-100 text-lg font-medium">@Website Made By Kiên💖</p>
         <div class="mt-2 space-x-4">
             <a href="https://discord.gg/your-discord" class="text-blue-200 hover:text-blue-400 transition duration-300">Discord</a>
             <a href="https://github.com/jayetcixgaming2010" class="text-blue-200 hover:text-blue-400 transition duration-300">GitHub</a>
@@ -196,18 +195,13 @@
         // Encryption key for localStorage
         const ENCRYPTION_KEY = "HGClientHack2025";
 
-        // Encrypt data before saving to localStorage
-        function encryptData(data) {
-            return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
-        }
-
         // Decrypt data from localStorage
         function decryptData(encryptedData) {
             try {
                 const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
                 return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
             } catch (e) {
-                console.error('Decryption failed:', e);
+                console.error("Decryption error:", e);
                 return null;
             }
         }
@@ -228,8 +222,8 @@
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
                     localStorage.removeItem('loggedInUser');
-                    localStorage.removeItem('twoFactorCode');
-                    window.location.reload();
+                    localStorage.removeItem('uploadPassword');
+                    window.location.href = "index.html";
                 });
             } else {
                 navMenu.innerHTML = `
@@ -243,42 +237,42 @@
             }
         }
 
-        // Toggle mobile menu
-        function toggleMenu() {
-            const menu = document.querySelector('.nav-menu');
-            menu.classList.toggle('active');
-        }
-
-        // Dark mode toggle
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        });
-
-        // Music toggle
-        const musicToggle = document.getElementById('musicToggle');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        musicToggle.addEventListener('click', () => {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                musicToggle.textContent = '🔊';
-            } else {
-                backgroundMusic.pause();
-                musicToggle.textContent = '🔇';
-            }
-        });
-
-        // Load theme from localStorage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
-
         // Load page
         window.onload = function() {
             updateNav();
+
+            // Toggle mobile menu
+            function toggleMenu() {
+                const menu = document.querySelector('.nav-menu');
+                menu.classList.toggle('active');
+            }
+
+            // Dark mode toggle
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+                localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+
+            // Music toggle
+            const musicToggle = document.getElementById('musicToggle');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            musicToggle.addEventListener('click', () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicToggle.textContent = '🔊';
+                } else {
+                    backgroundMusic.pause();
+                    musicToggle.textContent = '🔇';
+                }
+            });
+
+            // Load theme from localStorage
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
         };
     </script>
 </body>
