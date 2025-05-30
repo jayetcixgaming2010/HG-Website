@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         .bg-animated {
@@ -64,7 +65,7 @@
                 transition: all 0.3s ease;
             }
             .nav-menu.active a, .nav-menu.active button {
-                font-size: 0.875rem; /* text-sm */
+                font-size: 0.875rem;
             }
         }
     </style>
@@ -119,10 +120,34 @@
     </div>
 
     <script>
+        // Encryption key for localStorage
+        const ENCRYPTION_KEY = "HGClientHack2025";
+
+        // Encrypt data before saving to localStorage
+        function encryptData(data) {
+            return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
+        }
+
+        // Decrypt data from localStorage
+        function decryptData(encryptedData) {
+            try {
+                const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+                return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+            } catch (e) {
+                console.error('Decryption failed:', e);
+                return null;
+            }
+        }
+
+        // Generate random 2FA code
+        function generateTwoFactorCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
         // Update navigation based on login status
         function updateNav() {
             const navMenu = document.getElementById('navMenu');
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            const loggedInUser = decryptData(localStorage.getItem('loggedInUser'));
             if (loggedInUser && loggedInUser.displayName) {
                 navMenu.innerHTML = `
                     <a href="index.html" class="text-blue-100 text-base font-semibold hover:bg-blue-500/30 hover:text-white px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
@@ -135,6 +160,7 @@
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
                     localStorage.removeItem('loggedInUser');
+                    localStorage.removeItem('twoFactorCode');
                     window.location.reload();
                 });
             } else {
@@ -154,28 +180,31 @@
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const users = decryptData(localStorage.getItem('users')) || [];
             const user = users.find(u => u.email === email && u.password === password);
 
             if (user) {
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-                alert('Sign in successful!');
+                const loggedInUser = { email: user.email, displayName: user.displayName };
+                localStorage.setItem('loggedInUser', encryptData(loggedInUser));
+                const twoFactorCode = generateTwoFactorCode();
+                localStorage.setItem('twoFactorCode', encryptData(twoFactorCode));
+                alert(`Sign in successful! Your 2FA code is: ${twoFactorCode}`);
                 window.location.href = 'index.html';
             } else {
                 alert('Invalid email or password!');
             }
         });
 
-        // Load page and update navigation
-        window.onload = function() {
-            updateNav();
-        };
-
         // Toggle mobile menu
         function toggleMenu() {
             const menu = document.querySelector('.nav-menu');
             menu.classList.toggle('active');
         }
+
+        // Load page and update navigation
+        window.onload = function() {
+            updateNav();
+        };
     </script>
 </body>
 </html>
