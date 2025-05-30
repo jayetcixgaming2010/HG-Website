@@ -99,6 +99,21 @@
         .btn-primary:hover {
             background: #5439cc;
         }
+        .btn-add {
+            background: #ec4899;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .btn-add:hover {
+            background: #d43f8d;
+        }
         .item-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -240,6 +255,9 @@
         <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
+    <!-- Add Button (For Owner) -->
+    <button id="addButton" class="btn-add text-white hidden">+</button>
+
     <script>
         // Encryption key for localStorage
         const ENCRYPTION_KEY = "HGClientHack2025";
@@ -268,19 +286,16 @@
         function checkOwner() {
             const user = decryptData(localStorage.getItem('loggedInUser'));
             if (user) {
-                console.log("User data from localStorage:", user); // Debug log
                 if (user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
                     isOwner = true;
-                    console.log("User is owner:", isOwner); // Debug log
                 } else {
                     isOwner = false;
-                    console.log("User is not owner:", isOwner); // Debug log
                 }
             } else {
                 isOwner = false;
-                console.log("No user data found in localStorage, isOwner set to:", isOwner); // Debug log
             }
             updateNav();
+            updateAddButton();
         }
 
         // Update navigation based on login status
@@ -293,7 +308,6 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    ${isOwner ? `<a href="#" id="uploadNavLink" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Upload</a>` : ''}
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
@@ -310,19 +324,17 @@
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
                     <a href="signin.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
                     <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
-                    ${isOwner ? `<a href="#" id="uploadNavLink" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Upload</a>` : ''}
                 `;
             }
+        }
 
-            // Add event listener for Upload link
-            const uploadNavLink = document.getElementById('uploadNavLink');
-            if (uploadNavLink) {
-                uploadNavLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    document.getElementById('clientList').classList.add('hidden');
-                    document.getElementById('clientSubmission').classList.remove('hidden');
-                    document.querySelector('.pagination').classList.add('hidden');
-                });
+        // Update add button visibility
+        function updateAddButton() {
+            const addButton = document.getElementById('addButton');
+            if (isOwner) {
+                addButton.classList.remove('hidden');
+            } else {
+                addButton.classList.add('hidden');
             }
         }
 
@@ -458,6 +470,14 @@
         window.onload = function() {
             checkOwner();
             loadClients();
+
+            // Add button event listener
+            const addButton = document.getElementById('addButton');
+            addButton.addEventListener('click', () => {
+                document.getElementById('clientList').classList.add('hidden');
+                document.getElementById('clientSubmission').classList.remove('hidden');
+                document.querySelector('.pagination').classList.add('hidden');
+            });
 
             // Pagination
             document.getElementById('prevPageClient').addEventListener('click', () => {
