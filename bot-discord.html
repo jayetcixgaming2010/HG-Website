@@ -213,6 +213,7 @@
             </div>
             <div class="flex items-center space-x-4">
                 <button id="themeToggle" class="text-blue-100 text-xl">🌙</button>
+                <button id="musicToggle" class="text-blue-100 text-xl">🔊</button>
                 <button class="sm:hidden text-blue-100 text-xl" onclick="toggleMenu()">☰</button>
             </div>
         </nav>
@@ -257,6 +258,12 @@
             <button type="submit" class="btn-primary text-white">Submit for Review</button>
         </form>
     </div>
+
+    <!-- Audio Background -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="background-music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
@@ -356,6 +363,19 @@
             document.body.classList.toggle('dark-mode');
             themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
             localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Music toggle
+        const musicToggle = document.getElementById('musicToggle');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        musicToggle.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicToggle.textContent = '🔊';
+            } else {
+                backgroundMusic.pause();
+                musicToggle.textContent = '🔇';
+            }
         });
 
         // Load theme from localStorage
