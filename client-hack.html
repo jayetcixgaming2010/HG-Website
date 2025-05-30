@@ -99,21 +99,6 @@
         .btn-primary:hover {
             background: #5439cc;
         }
-        .btn-add {
-            background: #ec4899;
-            padding: 10px 15px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            font-weight: 600;
-            transition: background 0.3s ease;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-        .btn-add:hover {
-            background: #d43f8d;
-        }
         .item-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -223,7 +208,7 @@
             <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Client</h2>
             <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" required />
             <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here..." required></textarea>
+            <input id="clientLinkInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Download Link" required />
             <div class="flex justify-end mt-4 space-x-4">
                 <button id="submitClient" class="btn-primary text-white">Submit for Review</button>
                 <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
@@ -255,9 +240,6 @@
         <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
-    <!-- Add Button (For Owner) -->
-    <button id="addButton" class="btn-add text-white hidden">+</button>
-
     <script>
         // Encryption key for localStorage
         const ENCRYPTION_KEY = "HGClientHack2025";
@@ -278,24 +260,18 @@
             }
         }
 
-        // Check owner status
-        let isOwner = false;
-        const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
-        const OWNER_PASSWORD = "kien$$$dz2k10";
+        // Check password status
+        let isAuthorized = false;
+        const CORRECT_PASSWORD = "kien$$$dz2k10";
 
-        function checkOwner() {
-            const user = decryptData(localStorage.getItem('loggedInUser'));
-            if (user) {
-                if (user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
-                    isOwner = true;
-                } else {
-                    isOwner = false;
+        function checkPassword() {
+            let storedPassword = localStorage.getItem('uploadPassword');
+            if (storedPassword) {
+                if (decryptData(storedPassword) === CORRECT_PASSWORD) {
+                    isAuthorized = true;
                 }
-            } else {
-                isOwner = false;
             }
             updateNav();
-            updateAddButton();
         }
 
         // Update navigation based on login status
@@ -308,15 +284,30 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    <a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0 ${isOwner ? '' : 'hidden'}">Owner Settings</a>
+                    <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0 ${isAuthorized ? '' : 'hidden'}" id="uploadLink">Upload</a>
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
                     localStorage.removeItem('loggedInUser');
+                    localStorage.removeItem('uploadPassword');
+                    isAuthorized = false;
                     window.location.href = "index.html";
                 });
+
+                const uploadLink = document.getElementById('uploadLink');
+                if (uploadLink) {
+                    uploadLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        promptForPassword();
+                        if (isAuthorized) {
+                            document.getElementById('clientList').classList.add('hidden');
+                            document.getElementById('clientSubmission').classList.remove('hidden');
+                            document.querySelector('.pagination').classList.add('hidden');
+                        }
+                    });
+                }
             } else {
                 navMenu.innerHTML = `
                     <a href="index.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Home</a>
@@ -329,13 +320,18 @@
             }
         }
 
-        // Update add button visibility
-        function updateAddButton() {
-            const addButton = document.getElementById('addButton');
-            if (isOwner) {
-                addButton.classList.remove('hidden');
-            } else {
-                addButton.classList.add('hidden');
+        // Password prompt for Upload access
+        function promptForPassword() {
+            if (!isAuthorized) {
+                const password = prompt("Please enter the password to access the Upload feature:");
+                if (password === CORRECT_PASSWORD) {
+                    localStorage.setItem('uploadPassword', encryptData(password));
+                    isAuthorized = true;
+                    alert("Password correct! You can now access the Upload feature.");
+                    checkPassword();
+                } else {
+                    alert("Incorrect password. You cannot access the Upload feature.");
+                }
             }
         }
 
@@ -352,7 +348,7 @@
             if (sortOption === 'title-asc') {
                 clients.sort((a, b) => a.title.localeCompare(b.title));
             } else if (sortOption === 'title-desc') {
-                clients.sort((a, b) => b.title.localeCompare(a.title));
+                clients.sort((a, b) => b.title.localeCompare(b.title));
             }
 
             const totalItems = clients.length;
@@ -384,30 +380,16 @@
                     ${client.imageBase64 ? `<img src="${client.imageBase64}" class="item-image" alt="${client.title} image" />` : ''}
                     <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
                     <p class="text-blue-200 mb-4">A client for ${client.title.toLowerCase()} in Roblox games.</p>
-                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
-                    <div class="flex justify-end space-x-2">
-                        <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
-                        ${isOwner ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-client" data-index="${globalIndex}">Delete</button>` : ''}
+                    <a href="${client.link}" target="_blank" class="text-blue-200 hover:text-blue-400 transition duration-300">Download Link</a>
+                    <div class="flex justify-end space-x-2 mt-4">
+                        ${isAuthorized ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-client" data-index="${globalIndex}">Delete</button>` : ''}
                     </div>
                 `;
                 clientList.appendChild(card);
             });
 
-            // Copy functionality
-            document.querySelectorAll('.copy-client').forEach(button => {
-                button.addEventListener('click', () => {
-                    const index = parseInt(button.getAttribute('data-index'));
-                    const client = clients[index];
-                    navigator.clipboard.writeText(client.code).then(() => {
-                        alert('Client code copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Failed to copy client: ', err);
-                    });
-                });
-            });
-
-            // Delete functionality (only for owner)
-            if (isOwner) {
+            // Delete functionality (only for authorized users)
+            if (isAuthorized) {
                 document.querySelectorAll('.delete-client').forEach(button => {
                     button.addEventListener('click', () => {
                         const index = parseInt(button.getAttribute('data-index'));
@@ -424,17 +406,17 @@
         // Client submission
         const clientTitleInput = document.getElementById('clientTitleInput');
         const clientImageInput = document.getElementById('clientImageInput');
-        const clientCodeInput = document.getElementById('clientCodeInput');
+        const clientLinkInput = document.getElementById('clientLinkInput');
         const submitClient = document.getElementById('submitClient');
         const cancelSubmit = document.getElementById('cancelSubmit');
         const clientSubmission = document.getElementById('clientSubmission');
 
         submitClient.addEventListener('click', () => {
             const title = clientTitleInput.value.trim();
-            const code = clientCodeInput.value.trim();
+            const link = clientLinkInput.value.trim();
 
-            if (!title || !code) {
-                alert("Please provide both a title and client code!");
+            if (!title || !link) {
+                alert("Please provide both a title and download link!");
                 return;
             }
 
@@ -445,7 +427,7 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const imageBase64 = event.target.result;
-                    clients.push({ title, imageBase64, code });
+                    clients.push({ title, imageBase64, link });
                     try {
                         localStorage.setItem('clients', JSON.stringify(clients));
                         resetForm();
@@ -460,7 +442,7 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                clients.push({ title, code });
+                clients.push({ title, link });
                 localStorage.setItem('clients', JSON.stringify(clients));
                 resetForm();
                 alert("Client submitted successfully!");
@@ -476,7 +458,7 @@
         function resetForm() {
             clientTitleInput.value = '';
             clientImageInput.value = '';
-            clientCodeInput.value = '';
+            clientLinkInput.value = '';
             clientSubmission.classList.add('hidden');
             document.getElementById('clientList').classList.remove('hidden');
             document.querySelector('.pagination').classList.remove('hidden');
@@ -486,16 +468,8 @@
 
         // Load page
         window.onload = function() {
-            checkOwner();
+            checkPassword();
             loadClients();
-
-            // Add button event listener
-            const addButton = document.getElementById('addButton');
-            addButton.addEventListener('click', () => {
-                document.getElementById('clientList').classList.add('hidden');
-                document.getElementById('clientSubmission').classList.remove('hidden');
-                document.querySelector('.pagination').classList.add('hidden');
-            });
 
             // Pagination
             document.getElementById('prevPageClient').addEventListener('click', () => {
