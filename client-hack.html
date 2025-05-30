@@ -96,6 +96,26 @@
         .btn-primary:hover {
             background: #5439cc;
         }
+        .btn-edit {
+            background: #f59e0b;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-edit:hover {
+            background: #d97706;
+        }
+        .btn-delete {
+            background: #ef4444;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+        }
         .client-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -138,7 +158,7 @@
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center gap-3">
                 <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
-                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 �	C𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
             <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
                 <!-- Menu sẽ được cập nhật động bằng JavaScript -->
@@ -154,12 +174,13 @@
 
         <!-- Client Submission (Owner Only) -->
         <div id="clientInput" class="card fade-in hidden mb-8">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-200">Submit Client Hack (Owner Only)</h2>
+            <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Submit Client Hack (Owner Only)</h2>
             <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" />
             <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
             <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here (Owner only)..."></textarea>
-            <div class="flex justify-end mt-4">
+            <div class="flex justify-end mt-4 space-x-4">
                 <button id="submitClient" class="btn-primary text-white">Submit</button>
+                <button id="cancelEdit" class="btn-delete text-white hidden">Cancel</button>
             </div>
         </div>
 
@@ -194,6 +215,7 @@
     <script>
         // Check owner status
         let isOwner = false;
+        let editIndex = null; // To track which client is being edited
         const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
         const OWNER_PASSWORD = "kien$$$dz2k10";
 
@@ -248,7 +270,7 @@
 
             // Calculate start and end index for the current page
             const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
             const paginatedClients = clients.slice(startIndex, endIndex);
 
             // Update page info
@@ -268,7 +290,7 @@
 
             clientList.innerHTML = '';
             paginatedClients.forEach((client, index) => {
-                const globalIndex = startIndex + index; // Calculate global index for copy functionality
+                const globalIndex = startIndex + index; // Calculate global index for copy/edit/delete functionality
                 const card = document.createElement('div');
                 card.className = 'card fade-in';
                 card.innerHTML = `
@@ -276,8 +298,12 @@
                     <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
                     <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
                     <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
+                        ${isOwner ? `
+                            <button class="btn-edit text-white edit-client" data-index="${globalIndex}">Edit</button>
+                            <button class="btn-delete text-white delete-client" data-index="${globalIndex}">Delete</button>
+                        ` : ''}
                     </div>
                 `;
                 clientList.appendChild(card);
@@ -295,6 +321,39 @@
                     });
                 });
             });
+
+            // Add edit functionality to buttons (only for owner)
+            if (isOwner) {
+                document.querySelectorAll('.edit-client').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const index = parseInt(button.getAttribute('data-index'));
+                        editIndex = index;
+                        const client = clients[index];
+                        // Populate the form with existing data
+                        document.getElementById('clientTitleInput').value = client.title;
+                        document.getElementById('clientCodeInput').value = client.code;
+                        document.getElementById('clientImageInput').value = ''; // File input cannot be pre-filled
+                        document.getElementById('clientInputTitle').textContent = 'Edit Client Hack';
+                        document.getElementById('submitClient').textContent = 'Save';
+                        document.getElementById('cancelEdit').classList.remove('hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+
+                // Add delete functionality to buttons (only for owner)
+                document.querySelectorAll('.delete-client').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const index = parseInt(button.getAttribute('data-index'));
+                        if (confirm('Are you sure you want to delete this client?')) {
+                            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+                            clients.splice(index, 1);
+                            localStorage.setItem('clients', JSON.stringify(clients));
+                            currentPage = 1; // Reset to first page after deletion
+                            loadClients();
+                        }
+                    });
+                });
+            }
         }
 
         // Load page
@@ -327,15 +386,16 @@
             menu.classList.toggle('active');
         }
 
-        // Code submission functionality
+        // Code submission/edit functionality
         const clientTitleInput = document.getElementById('clientTitleInput');
         const clientImageInput = document.getElementById('clientImageInput');
         const clientCodeInput = document.getElementById('clientCodeInput');
         const submitClient = document.getElementById('submitClient');
+        const cancelEdit = document.getElementById('cancelEdit');
 
         submitClient.addEventListener('click', () => {
             if (!isOwner) {
-                alert("Only the owner can submit content!");
+                alert("Only the owner can submit or edit content!");
                 return;
             }
 
@@ -348,42 +408,82 @@
             }
 
             const file = clientImageInput.files[0];
-            if (file) {
-                // Convert image to Base64
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imageBase64 = event.target.result;
-                    const clients = JSON.parse(localStorage.getItem('clients')) || [];
-                    clients.push({ title, imageBase64, code });
-                    try {
-                        localStorage.setItem('clients', JSON.stringify(clients));
-                        clientTitleInput.value = '';
-                        clientImageInput.value = '';
-                        clientCodeInput.value = '';
-                        currentPage = 1; // Reset to first page after submission
-                        alert("Client submitted successfully!");
-                        loadClients();
-                    } catch (e) {
-                        alert("Failed to save client: localStorage might be full. Try removing some clients or using smaller images.");
-                    }
-                };
-                reader.onerror = function() {
-                    alert("Failed to read the image file!");
-                };
-                reader.readAsDataURL(file);
+            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+
+            if (editIndex !== null) {
+                // Edit existing client
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        clients[editIndex] = { title, imageBase64, code };
+                        try {
+                            localStorage.setItem('clients', JSON.stringify(clients));
+                            resetForm();
+                            alert("Client updated successfully!");
+                            loadClients();
+                        } catch (e) {
+                            alert("Failed to update client: localStorage might be full. Try removing some clients or using smaller images.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Keep the existing image if no new image is uploaded
+                    clients[editIndex] = { title, imageBase64: clients[editIndex].imageBase64 || '', code };
+                    localStorage.setItem('clients', JSON.stringify(clients));
+                    resetForm();
+                    alert("Client updated successfully!");
+                    loadClients();
+                }
             } else {
-                // No image uploaded
-                const clients = JSON.parse(localStorage.getItem('clients')) || [];
-                clients.push({ title, code });
-                localStorage.setItem('clients', JSON.stringify(clients));
-                clientTitleInput.value = '';
-                clientImageInput.value = '';
-                clientCodeInput.value = '';
-                currentPage = 1; // Reset to first page after submission
-                alert("Client submitted successfully!");
-                loadClients();
+                // Add new client
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        clients.push({ title, imageBase64, code });
+                        try {
+                            localStorage.setItem('clients', JSON.stringify(clients));
+                            resetForm();
+                            alert("Client submitted successfully!");
+                            loadClients();
+                        } catch (e) {
+                            alert("Failed to save client: localStorage might be full. Try removing some clients or using smaller images.");
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert("Failed to read the image file!");
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    clients.push({ title, code });
+                    localStorage.setItem('clients', JSON.stringify(clients));
+                    resetForm();
+                    alert("Client submitted successfully!");
+                    loadClients();
+                }
             }
         });
+
+        // Cancel edit functionality
+        cancelEdit.addEventListener('click', () => {
+            resetForm();
+        });
+
+        // Reset form to initial state
+        function resetForm() {
+            clientTitleInput.value = '';
+            clientImageInput.value = '';
+            clientCodeInput.value = '';
+            document.getElementById('clientInputTitle').textContent = 'Submit Client Hack (Owner Only)';
+            document.getElementById('submitClient').textContent = 'Submit';
+            document.getElementById('cancelEdit').classList.add('hidden');
+            editIndex = null;
+            currentPage = 1; // Reset to first page after submission or cancel
+        }
     </script>
 </body>
 </html>
