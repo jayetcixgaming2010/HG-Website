@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Client Hack</title>
+    <title>[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 - Bot Discord</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -189,28 +189,28 @@
 
         <!-- Welcome Message -->
         <div class="text-center mb-8 fade-in">
-            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Client Hack</h1>
-            <p class="text-lg text-blue-200 mt-2">Powerful clients for Roblox games</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-100 drop-shadow-md">Bot Discord</h1>
+            <p class="text-lg text-blue-200 mt-2">Useful Discord bots for your server</p>
         </div>
 
-        <!-- Client List -->
-        <div id="clientList" class="item-grid"></div>
+        <!-- Bot List -->
+        <div id="botList" class="item-grid"></div>
 
         <!-- Pagination -->
         <div class="pagination">
-            <button id="prevPageClient" disabled>Previous</button>
-            <span id="pageInfoClient" class="text-blue-100 font-semibold"></span>
-            <button id="nextPageClient" disabled>Next</button>
+            <button id="prevPageBot" disabled>Previous</button>
+            <span id="pageInfoBot" class="text-blue-100 font-semibold"></span>
+            <button id="nextPageBot" disabled>Next</button>
         </div>
 
-        <!-- Client Submission Form (Hidden by Default) -->
-        <div id="clientSubmission" class="card fade-in mt-8 hidden">
-            <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Client</h2>
-            <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" required />
-            <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <input id="clientLinkInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Download Link" required />
+        <!-- Bot Submission Form (Hidden by Default) -->
+        <div id="botSubmission" class="card fade-in mt-8 hidden">
+            <h2 id="botInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Bot</h2>
+            <input id="botTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Bot Title" required />
+            <input id="botImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
+            <input id="botLinkInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Invite Link" required />
             <div class="flex justify-end mt-4 space-x-4">
-                <button id="submitClient" class="btn-primary text-white">Submit for Review</button>
+                <button id="submitBot" class="btn-primary text-white">Submit for Review</button>
                 <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
             </div>
         </div>
@@ -302,8 +302,8 @@
                         e.preventDefault();
                         promptForPassword();
                         if (isAuthorized) {
-                            document.getElementById('clientList').classList.add('hidden');
-                            document.getElementById('clientSubmission').classList.remove('hidden');
+                            document.getElementById('botList').classList.add('hidden');
+                            document.getElementById('botSubmission').classList.remove('hidden');
                             document.querySelector('.pagination').classList.add('hidden');
                         }
                     });
@@ -339,102 +339,102 @@
         let currentPage = 1;
         const itemsPerPage = 10;
 
-        // Load and display clients
-        function loadClients(sortOption = 'all') {
-            const clientList = document.getElementById('clientList');
-            let clients = JSON.parse(localStorage.getItem('clients')) || [];
+        // Load and display bots
+        function loadBots(sortOption = 'all') {
+            const botList = document.getElementById('botList');
+            let bots = JSON.parse(localStorage.getItem('bots')) || [];
             
-            // Sort clients based on the selected option
+            // Sort bots based on the selected option
             if (sortOption === 'title-asc') {
-                clients.sort((a, b) => a.title.localeCompare(b.title));
+                bots.sort((a, b) => a.title.localeCompare(b.title));
             } else if (sortOption === 'title-desc') {
-                clients.sort((a, b) => b.title.localeCompare(b.title));
+                bots.sort((a, b) => b.title.localeCompare(b.title));
             }
 
-            const totalItems = clients.length;
+            const totalItems = bots.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage);
 
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-            const paginatedClients = clients.slice(startIndex, endIndex);
+            const paginatedBots = bots.slice(startIndex, endIndex);
 
-            const pageInfo = document.getElementById('pageInfoClient');
+            const pageInfo = document.getElementById('pageInfoBot');
             pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
 
-            const prevButton = document.getElementById('prevPageClient');
-            const nextButton = document.getElementById('nextPageClient');
+            const prevButton = document.getElementById('prevPageBot');
+            const nextButton = document.getElementById('nextPageBot');
             prevButton.disabled = currentPage === 1;
             nextButton.disabled = currentPage === totalPages || totalPages === 0;
 
-            if (paginatedClients.length === 0) {
-                clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
+            if (paginatedBots.length === 0) {
+                botList.innerHTML = '<p class="text-center text-blue-200">No bots available yet.</p>';
                 return;
             }
 
-            clientList.innerHTML = '';
-            paginatedClients.forEach((client, index) => {
+            botList.innerHTML = '';
+            paginatedBots.forEach((bot, index) => {
                 const globalIndex = startIndex + index;
                 const card = document.createElement('div');
                 card.className = 'card fade-in';
                 card.innerHTML = `
-                    ${client.imageBase64 ? `<img src="${client.imageBase64}" class="item-image" alt="${client.title} image" />` : ''}
-                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
-                    <p class="text-blue-200 mb-4">A client for ${client.title.toLowerCase()} in Roblox games.</p>
-                    <a href="${client.link}" target="_blank" class="text-blue-200 hover:text-blue-400 transition duration-300">Download Link</a>
+                    ${bot.imageBase64 ? `<img src="${bot.imageBase64}" class="item-image" alt="${bot.title} image" />` : ''}
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${bot.title}</h3>
+                    <p class="text-blue-200 mb-4">A Discord bot for ${bot.title.toLowerCase()}.</p>
+                    <a href="${bot.link}" target="_blank" class="text-blue-200 hover:text-blue-400 transition duration-300">Invite Link</a>
                     <div class="flex justify-end space-x-2 mt-4">
-                        ${isAuthorized ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-client" data-index="${globalIndex}">Delete</button>` : ''}
+                        ${isAuthorized ? `<button class="btn-primary text-white bg-red-500 hover:bg-red-600 delete-bot" data-index="${globalIndex}">Delete</button>` : ''}
                     </div>
                 `;
-                clientList.appendChild(card);
+                botList.appendChild(card);
             });
 
             // Delete functionality (only for authorized users)
             if (isAuthorized) {
-                document.querySelectorAll('.delete-client').forEach(button => {
+                document.querySelectorAll('.delete-bot').forEach(button => {
                     button.addEventListener('click', () => {
                         const index = parseInt(button.getAttribute('data-index'));
-                        if (confirm(`Are you sure you want to delete "${clients[index].title}"?`)) {
-                            clients.splice(index, 1);
-                            localStorage.setItem('clients', JSON.stringify(clients));
-                            loadClients(document.getElementById('sortOptions').value);
+                        if (confirm(`Are you sure you want to delete "${bots[index].title}"?`)) {
+                            bots.splice(index, 1);
+                            localStorage.setItem('bots', JSON.stringify(bots));
+                            loadBots(document.getElementById('sortOptions').value);
                         }
                     });
                 });
             }
         }
 
-        // Client submission
-        const clientTitleInput = document.getElementById('clientTitleInput');
-        const clientImageInput = document.getElementById('clientImageInput');
-        const clientLinkInput = document.getElementById('clientLinkInput');
-        const submitClient = document.getElementById('submitClient');
+        // Bot submission
+        const botTitleInput = document.getElementById('botTitleInput');
+        const botImageInput = document.getElementById('botImageInput');
+        const botLinkInput = document.getElementById('botLinkInput');
+        const submitBot = document.getElementById('submitBot');
         const cancelSubmit = document.getElementById('cancelSubmit');
-        const clientSubmission = document.getElementById('clientSubmission');
+        const botSubmission = document.getElementById('botSubmission');
 
-        submitClient.addEventListener('click', () => {
-            const title = clientTitleInput.value.trim();
-            const link = clientLinkInput.value.trim();
+        submitBot.addEventListener('click', () => {
+            const title = botTitleInput.value.trim();
+            const link = botLinkInput.value.trim();
 
             if (!title || !link) {
-                alert("Please provide both a title and download link!");
+                alert("Please provide both a title and invite link!");
                 return;
             }
 
-            const file = clientImageInput.files[0];
-            let clients = JSON.parse(localStorage.getItem('clients')) || [];
+            const file = botImageInput.files[0];
+            let bots = JSON.parse(localStorage.getItem('bots')) || [];
 
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const imageBase64 = event.target.result;
-                    clients.push({ title, imageBase64, link });
+                    bots.push({ title, imageBase64, link });
                     try {
-                        localStorage.setItem('clients', JSON.stringify(clients));
+                        localStorage.setItem('bots', JSON.stringify(bots));
                         resetForm();
-                        alert("Client submitted successfully!");
-                        loadClients();
+                        alert("Bot submitted successfully!");
+                        loadBots();
                     } catch (e) {
-                        alert("Failed to save client: localStorage might be full.");
+                        alert("Failed to save bot: localStorage might be full.");
                     }
                 };
                 reader.onerror = function() {
@@ -442,11 +442,11 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                clients.push({ title, link });
-                localStorage.setItem('clients', JSON.stringify(clients));
+                bots.push({ title, link });
+                localStorage.setItem('bots', JSON.stringify(bots));
                 resetForm();
-                alert("Client submitted successfully!");
-                loadClients();
+                alert("Bot submitted successfully!");
+                loadBots();
             }
         });
 
@@ -456,41 +456,41 @@
 
         // Reset form
         function resetForm() {
-            clientTitleInput.value = '';
-            clientImageInput.value = '';
-            clientLinkInput.value = '';
-            clientSubmission.classList.add('hidden');
-            document.getElementById('clientList').classList.remove('hidden');
+            botTitleInput.value = '';
+            botImageInput.value = '';
+            botLinkInput.value = '';
+            botSubmission.classList.add('hidden');
+            document.getElementById('botList').classList.remove('hidden');
             document.querySelector('.pagination').classList.remove('hidden');
             currentPage = 1;
-            loadClients(document.getElementById('sortOptions').value);
+            loadBots(document.getElementById('sortOptions').value);
         }
 
         // Load page
         window.onload = function() {
             checkPassword();
-            loadClients();
+            loadBots();
 
             // Pagination
-            document.getElementById('prevPageClient').addEventListener('click', () => {
+            document.getElementById('prevPageBot').addEventListener('click', () => {
                 if (currentPage > 1) {
                     currentPage--;
-                    loadClients(document.getElementById('sortOptions').value);
+                    loadBots(document.getElementById('sortOptions').value);
                 }
             });
-            document.getElementById('nextPageClient').addEventListener('click', () => {
-                const clients = JSON.parse(localStorage.getItem('clients')) || [];
-                const totalPages = Math.ceil(clients.length / itemsPerPage);
+            document.getElementById('nextPageBot').addEventListener('click', () => {
+                const bots = JSON.parse(localStorage.getItem('bots')) || [];
+                const totalPages = Math.ceil(bots.length / itemsPerPage);
                 if (currentPage < totalPages) {
                     currentPage++;
-                    loadClients(document.getElementById('sortOptions').value);
+                    loadBots(document.getElementById('sortOptions').value);
                 }
             });
 
             // Sort options
             document.getElementById('sortOptions').addEventListener('change', (e) => {
                 currentPage = 1;
-                loadClients(e.target.value);
+                loadBots(e.target.value);
             });
         };
 
