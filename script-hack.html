@@ -99,23 +99,20 @@
         .btn-primary:hover {
             background: #5439cc;
         }
-        .btn-upload {
+        .btn-add {
             background: #ec4899;
-            width: 50px;
-            height: 50px;
+            padding: 10px 15px;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
             position: fixed;
             bottom: 20px;
             right: 20px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            z-index: 1000;
         }
-        .btn-upload:hover {
-            transform: scale(1.1);
+        .btn-add:hover {
+            background: #d43f8d;
         }
         .item-grid {
             display: grid;
@@ -221,15 +218,12 @@
             <button id="nextPageScript" disabled>Next</button>
         </div>
 
-        <!-- Upload Button (Only for Owner) -->
-        <div id="uploadButton" class="btn-upload hidden">+</div>
-
-        <!-- Script Submission Form -->
+        <!-- Script Submission Form (Hidden by Default) -->
         <div id="scriptSubmission" class="card fade-in mt-8 hidden">
             <h2 id="scriptInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Script</h2>
-            <input id="scriptTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Script Title" />
+            <input id="scriptTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Script Title" required />
             <input id="scriptImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
-            <textarea id="scriptCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Script Hack code here..."></textarea>
+            <textarea id="scriptCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Script Hack code here..." required></textarea>
             <div class="flex justify-end mt-4 space-x-4">
                 <button id="submitScript" class="btn-primary text-white">Submit for Review</button>
                 <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
@@ -261,6 +255,9 @@
         <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
+    <!-- Add Button (For Owner) -->
+    <button id="addButton" class="btn-add text-white hidden">+</button>
+
     <script>
         // Encryption key for localStorage
         const ENCRYPTION_KEY = "HGClientHack2025";
@@ -276,6 +273,7 @@
                 const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
                 return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
             } catch (e) {
+                console.error("Decryption error:", e);
                 return null;
             }
         }
@@ -287,10 +285,17 @@
 
         function checkOwner() {
             const user = decryptData(localStorage.getItem('loggedInUser'));
-            if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
-                isOwner = true;
-                document.getElementById('uploadButton').classList.remove('hidden');
+            if (user) {
+                if (user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
+                    isOwner = true;
+                } else {
+                    isOwner = false;
+                }
+            } else {
+                isOwner = false;
             }
+            updateNav();
+            updateAddButton();
         }
 
         // Update navigation based on login status
@@ -303,7 +308,6 @@
                     <a href="script-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Script Hack</a>
                     <a href="client-hack.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Client Hack</a>
                     <a href="bot-discord.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Bot Discord</a>
-                    ${isOwner ? `<a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Owner Settings</a>` : ''}
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
                 `;
@@ -321,6 +325,16 @@
                     <a href="signin.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign In</a>
                     <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
+            }
+        }
+
+        // Update add button visibility
+        function updateAddButton() {
+            const addButton = document.getElementById('addButton');
+            if (isOwner) {
+                addButton.classList.remove('hidden');
+            } else {
+                addButton.classList.add('hidden');
             }
         }
 
@@ -382,7 +396,7 @@
                     const index = parseInt(button.getAttribute('data-index'));
                     const script = scripts[index];
                     navigator.clipboard.writeText(script.code).then(() => {
-                        alert('Script copied to clipboard!');
+                        alert('Script code copied to clipboard!');
                     }).catch(err => {
                         console.error('Failed to copy script: ', err);
                     });
@@ -396,12 +410,7 @@
         const scriptCodeInput = document.getElementById('scriptCodeInput');
         const submitScript = document.getElementById('submitScript');
         const cancelSubmit = document.getElementById('cancelSubmit');
-        const uploadButton = document.getElementById('uploadButton');
         const scriptSubmission = document.getElementById('scriptSubmission');
-
-        uploadButton.addEventListener('click', () => {
-            scriptSubmission.classList.toggle('hidden');
-        });
 
         submitScript.addEventListener('click', () => {
             const title = scriptTitleInput.value.trim();
@@ -413,7 +422,7 @@
             }
 
             const file = scriptImageInput.files[0];
-            const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+            let scripts = JSON.parse(localStorage.getItem('scripts')) || [];
 
             if (file) {
                 const reader = new FileReader();
@@ -452,14 +461,23 @@
             scriptImageInput.value = '';
             scriptCodeInput.value = '';
             scriptSubmission.classList.add('hidden');
+            document.getElementById('scriptList').classList.remove('hidden');
+            document.querySelector('.pagination').classList.remove('hidden');
             currentPage = 1;
         }
 
         // Load page
         window.onload = function() {
-            updateNav();
             checkOwner();
             loadScripts();
+
+            // Add button event listener
+            const addButton = document.getElementById('addButton');
+            addButton.addEventListener('click', () => {
+                document.getElementById('scriptList').classList.add('hidden');
+                document.getElementById('scriptSubmission').classList.remove('hidden');
+                document.querySelector('.pagination').classList.add('hidden');
+            });
 
             // Pagination
             document.getElementById('prevPageScript').addEventListener('click', () => {
