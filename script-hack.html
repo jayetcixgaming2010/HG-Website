@@ -255,9 +255,6 @@
         <div class="absolute w-5 h-5 bg-purple-200 rounded-full opacity-25 particle" style="top: 20%; right: 30%;"></div>
     </div>
 
-    <!-- Add Button (Chỉ hiển thị khi nhập đúng mật khẩu) -->
-    <button id="addButton" class="btn-add text-white hidden">+</button>
-
     <script>
         // Encryption key for localStorage
         const ENCRYPTION_KEY = "HGClientHack2025";
@@ -290,7 +287,6 @@
                 }
             }
             updateNav();
-            updateAddButton();
         }
 
         // Update navigation based on login status
@@ -314,6 +310,7 @@
                     isAuthorized = false;
                     window.location.href = "index.html";
                 });
+
                 const uploadLink = document.getElementById('uploadLink');
                 if (uploadLink) {
                     uploadLink.addEventListener('click', () => {
@@ -334,62 +331,20 @@
             }
         }
 
-        // Update add button visibility
-        function updateAddButton() {
-            const addButton = document.getElementById('addButton');
-            if (isAuthorized) {
-                addButton.classList.remove('hidden');
-            } else {
-                addButton.classList.add('hidden');
-            }
-        }
-
-        // Password prompt on page load
-        window.onload = function() {
-            checkPassword();
-            loadScripts();
-
+        // Password prompt for Upload access
+        function promptForPassword() {
             if (!isAuthorized) {
                 const password = prompt("Please enter the password to access the Upload feature:");
                 if (password === CORRECT_PASSWORD) {
                     localStorage.setItem('uploadPassword', encryptData(password));
                     isAuthorized = true;
+                    alert("Password correct! You can now access the Upload feature.");
                     checkPassword();
                 } else {
-                    alert("Incorrect password. Upload feature is not accessible.");
+                    alert("Incorrect password. You cannot access the Upload feature.");
                 }
             }
-
-            // Add button event listener
-            const addButton = document.getElementById('addButton');
-            addButton.addEventListener('click', () => {
-                document.getElementById('scriptList').classList.add('hidden');
-                document.getElementById('scriptSubmission').classList.remove('hidden');
-                document.querySelector('.pagination').classList.add('hidden');
-            });
-
-            // Pagination
-            document.getElementById('prevPageScript').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    loadScripts(document.getElementById('sortOptions').value);
-                }
-            });
-            document.getElementById('nextPageScript').addEventListener('click', () => {
-                const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
-                const totalPages = Math.ceil(scripts.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    loadScripts(document.getElementById('sortOptions').value);
-                }
-            });
-
-            // Sort options
-            document.getElementById('sortOptions').addEventListener('change', (e) => {
-                currentPage = 1;
-                loadScripts(e.target.value);
-            });
-        };
+        }
 
         // Pagination state
         let currentPage = 1;
@@ -404,7 +359,7 @@
             if (sortOption === 'title-asc') {
                 scripts.sort((a, b) => a.title.localeCompare(b.title));
             } else if (sortOption === 'title-desc') {
-                scripts.sort((a, b) => b.title.localeCompare(a.title));
+                scripts.sort((a, b) => b.title.localeCompare(b.title));
             }
 
             const totalItems = scripts.length;
@@ -535,6 +490,48 @@
             currentPage = 1;
             loadScripts(document.getElementById('sortOptions').value);
         }
+
+        // Load page
+        window.onload = function() {
+            checkPassword();
+            loadScripts();
+
+            // Pagination
+            document.getElementById('prevPageScript').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadScripts(document.getElementById('sortOptions').value);
+                }
+            });
+            document.getElementById('nextPageScript').addEventListener('click', () => {
+                const scripts = JSON.parse(localStorage.getItem('scripts')) || [];
+                const totalPages = Math.ceil(scripts.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadScripts(document.getElementById('sortOptions').value);
+                }
+            });
+
+            // Sort options
+            document.getElementById('sortOptions').addEventListener('change', (e) => {
+                currentPage = 1;
+                loadScripts(e.target.value);
+            });
+
+            // Prompt for password when trying to access Upload
+            const uploadLink = document.getElementById('uploadLink');
+            if (uploadLink) {
+                uploadLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    promptForPassword();
+                    if (isAuthorized) {
+                        document.getElementById('scriptList').classList.add('hidden');
+                        document.getElementById('scriptSubmission').classList.remove('hidden');
+                        document.querySelector('.pagination').classList.add('hidden');
+                    }
+                });
+            }
+        };
 
         // Toggle mobile menu
         function toggleMenu() {
