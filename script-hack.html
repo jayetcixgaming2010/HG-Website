@@ -147,6 +147,28 @@
             background: #4b3a99;
             cursor: not-allowed;
         }
+        .add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ec4899;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+            z-index: 1000;
+        }
+        .add-btn:hover {
+            transform: scale(1.1);
+            background: #db2777;
+        }
     </style>
 </head>
 <body class="bg-animated font-poppins min-h-screen flex flex-col justify-between text-white">
@@ -180,6 +202,9 @@
         </div>
     </div>
 
+    <!-- Add Button (Visible only to owner) -->
+    <div id="addButton" class="add-btn hidden" onclick="window.location.href='owner-settings.html#script'">+</div>
+
     <!-- Footer -->
     <footer class="w-full bg-white bg-opacity-10 backdrop-blur-md p-6 text-center mt-auto">
         <p class="text-blue-100 text-lg font-medium">@Website Make By Kiên💖</p>
@@ -207,6 +232,7 @@
             const user = JSON.parse(localStorage.getItem('loggedInUser'));
             if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
                 isOwner = true;
+                document.getElementById('addButton').classList.remove('hidden'); // Show add button for owner
             }
         }
 
@@ -285,7 +311,7 @@
                     <div class="flex justify-end space-x-2">
                         <button class="btn-primary text-white copy-script" data-index="${globalIndex}">Copy Code</button>
                         ${isOwner ? `
-                            <button class="btn-edit text-white edit-script" data-index="${globalIndex}" onclick="window.location.href='owner-settings.html'">Edit</button>
+                            <button class="btn-edit text-white edit-script" data-index="${globalIndex}" onclick="window.location.href='owner-settings.html#script'">Edit</button>
                             <button class="btn-delete text-white delete-script" data-index="${globalIndex}">Delete</button>
                         ` : ''}
                     </div>
