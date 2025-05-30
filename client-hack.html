@@ -73,6 +73,9 @@
             .nav-menu.active a, .nav-menu.active button {
                 font-size: 0.875rem;
             }
+            textarea {
+                height: 40vh !important;
+            }
         }
         .card {
             background: rgba(255, 255, 255, 0.1);
@@ -96,32 +99,30 @@
         .btn-primary:hover {
             background: #5439cc;
         }
-        .btn-edit {
-            background: #f59e0b;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: background 0.3s ease;
+        .btn-upload {
+            background: #ec4899;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-        .btn-edit:hover {
-            background: #d97706;
+        .btn-upload:hover {
+            transform: scale(1.1);
         }
-        .btn-delete {
-            background: #ef4444;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: background 0.3s ease;
-        }
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-        .client-grid {
+        .item-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
-        .client-image {
+        .item-image {
             width: 100%;
             height: 150px;
             object-fit: cover;
@@ -150,29 +151,6 @@
             background: #4b3a99;
             cursor: not-allowed;
         }
-        .add-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #ec4899;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s ease;
-            z-index: 1000;
-        }
-        .add-btn:hover {
-            transform: scale(1.1);
-            background: #db2777;
-        }
-        /* Dark mode styles */
         .dark-mode {
             background: #1a202c;
             color: #e2e8f0;
@@ -206,7 +184,7 @@
         <nav class="flex justify-between items-center mb-12 bg-white bg-opacity-20 backdrop-blur-md rounded-xl px-6 py-4 shadow-lg">
             <div class="flex items-center gap-3">
                 <img src="logo.png" alt="[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤 Logo" class="h-14 transition-transform hover:scale-110 duration-300 glow">
-                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 𝐂𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
+                <span class="text-blue-100 text-xl font-bold nav-shadow transition-all hover:text-blue-50 duration-300">[ 🎮 ] 𝐇𝐆 �(C𝐥𝐢𝐞𝐧𝐭 𝐇𝐚𝐜𝐤</span>
             </div>
             <div id="navMenu" class="nav-menu flex space-x-4 fade-in">
                 <!-- Menu sẽ được cập nhật động bằng JavaScript -->
@@ -218,10 +196,9 @@
             </div>
         </nav>
 
-        <!-- Search and Filter -->
-        <div class="flex justify-between items-center mb-8 fade-in">
-            <input type="text" id="searchInput" placeholder="Search clients..." class="w-full max-w-md p-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-blue-200">
-            <select id="filterSelect" class="ml-4 p-2 rounded-lg bg-white bg-opacity-20 text-white">
+        <!-- Filter Section -->
+        <div class="flex justify-center mb-6">
+            <select id="sortOptions" class="p-2 rounded-lg bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="all">All</option>
                 <option value="title-asc">Title (A-Z)</option>
                 <option value="title-desc">Title (Z-A)</option>
@@ -235,28 +212,29 @@
         </div>
 
         <!-- Client List -->
-        <div id="clientList" class="client-grid"></div>
+        <div id="clientList" class="item-grid"></div>
 
         <!-- Pagination -->
         <div class="pagination">
-            <button id="prevPage" disabled>Previous</button>
-            <span id="pageInfo" class="text-blue-100 font-semibold"></span>
-            <button id="nextPage" disabled>Next</button>
+            <button id="prevPageClient" disabled>Previous</button>
+            <span id="pageInfoClient" class="text-blue-100 font-semibold"></span>
+            <button id="nextPageClient" disabled>Next</button>
         </div>
-    </div>
 
-    <!-- Add Button (Visible only to owner) -->
-    <div id="addButton" class="add-btn hidden" onclick="window.location.href='owner-settings.html#client'">+</div>
+        <!-- Upload Button (Only for Owner) -->
+        <div id="uploadButton" class="btn-upload hidden">+</div>
 
-    <!-- User Upload Section -->
-    <div id="userUploadSection" class="container mx-auto p-6 max-w-7xl hidden">
-        <h2 class="text-2xl font-bold text-blue-100 mb-4">Upload Your Client</h2>
-        <form id="userUploadForm" class="bg-white bg-opacity-20 p-6 rounded-lg">
-            <input type="text" id="uploadTitle" placeholder="Client Title" class="w-full p-2 mb-4 rounded-lg bg-white bg-opacity-20 text-white placeholder-blue-200">
-            <textarea id="uploadCode" placeholder="Client Code" class="w-full p-2 mb-4 rounded-lg bg-white bg-opacity-20 text-white placeholder-blue-200" rows="5"></textarea>
-            <input type="file" id="uploadImage" accept="image/*" class="mb-4">
-            <button type="submit" class="btn-primary text-white">Submit for Review</button>
-        </form>
+        <!-- Client Submission Form -->
+        <div id="clientSubmission" class="card fade-in mt-8 hidden">
+            <h2 id="clientInputTitle" class="text-2xl font-semibold mb-4 text-gray-200">Upload Your Client</h2>
+            <input id="clientTitleInput" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Client Title" />
+            <input id="clientImageInput" type="file" accept="image/*" class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" />
+            <textarea id="clientCodeInput" class="w-full h-80 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 text-white placeholder-gray-300" placeholder="Paste your Client Hack code here..."></textarea>
+            <div class="flex justify-end mt-4 space-x-4">
+                <button id="submitClient" class="btn-primary text-white">Submit for Review</button>
+                <button id="cancelSubmit" class="btn-primary text-white bg-red-500 hover:bg-red-600">Cancel</button>
+            </div>
+        </div>
     </div>
 
     <!-- Audio Background -->
@@ -302,7 +280,7 @@
             }
         }
 
-        // Check owner status with 2FA
+        // Check owner status
         let isOwner = false;
         const OWNER_EMAIL = "letrungkien2k10phutho@gmail.com";
         const OWNER_PASSWORD = "kien$$$dz2k10";
@@ -310,13 +288,8 @@
         function checkOwner() {
             const user = decryptData(localStorage.getItem('loggedInUser'));
             if (user && user.email === OWNER_EMAIL && user.password === OWNER_PASSWORD) {
-                const twoFactorCode = prompt("Enter 2FA Code for Owner Access:");
-                if (twoFactorCode === "123456") {
-                    isOwner = true;
-                    document.getElementById('addButton').classList.remove('hidden');
-                } else {
-                    alert("Invalid 2FA Code!");
-                }
+                isOwner = true;
+                document.getElementById('uploadButton').classList.remove('hidden');
             }
         }
 
@@ -333,17 +306,11 @@
                     ${isOwner ? `<a href="owner-settings.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Owner Settings</a>` : ''}
                     <a href="#" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">${loggedInUser.displayName}</a>
                     <button id="signOutBtn" class="text-blue-100 text-base font-semibold hover:bg-red-600 px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Out</button>
-                    <button id="uploadToggleBtn" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Upload Client</button>
                 `;
                 const signOutBtn = document.getElementById('signOutBtn');
                 signOutBtn.addEventListener('click', () => {
                     localStorage.removeItem('loggedInUser');
-                    window.location.reload();
-                });
-                const uploadToggleBtn = document.getElementById('uploadToggleBtn');
-                uploadToggleBtn.addEventListener('click', () => {
-                    const uploadSection = document.getElementById('userUploadSection');
-                    uploadSection.classList.toggle('hidden');
+                    window.location.href = "index.html";
                 });
             } else {
                 navMenu.innerHTML = `
@@ -355,6 +322,172 @@
                     <a href="signup.html" class="text-blue-100 text-base font-semibold px-3 py-1 rounded-md transition duration-300 nav-link whitespace-nowrap flex-shrink-0">Sign Up</a>
                 `;
             }
+        }
+
+        // Pagination state
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // Load and display clients
+        function loadClients(sortOption = 'all') {
+            const clientList = document.getElementById('clientList');
+            let clients = JSON.parse(localStorage.getItem('clients')) || [];
+            
+            // Sort clients based on the selected option
+            if (sortOption === 'title-asc') {
+                clients.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortOption === 'title-desc') {
+                clients.sort((a, b) => b.title.localeCompare(a.title));
+            }
+
+            const totalItems = clients.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const paginatedClients = clients.slice(startIndex, endIndex);
+
+            const pageInfo = document.getElementById('pageInfoClient');
+            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
+
+            const prevButton = document.getElementById('prevPageClient');
+            const nextButton = document.getElementById('nextPageClient');
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages || totalPages === 0;
+
+            if (paginatedClients.length === 0) {
+                clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
+                return;
+            }
+
+            clientList.innerHTML = '';
+            paginatedClients.forEach((client, index) => {
+                const globalIndex = startIndex + index;
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.innerHTML = `
+                    ${client.imageBase64 ? `<img src="${client.imageBase64}" class="item-image" alt="${client.title} image" />` : ''}
+                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
+                    <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
+                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
+                    <div class="flex justify-end space-x-2">
+                        <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
+                    </div>
+                `;
+                clientList.appendChild(card);
+            });
+
+            document.querySelectorAll('.copy-client').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = parseInt(button.getAttribute('data-index'));
+                    const client = clients[index];
+                    navigator.clipboard.writeText(client.code).then(() => {
+                        alert('Client copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy client: ', err);
+                    });
+                });
+            });
+        }
+
+        // Client submission
+        const clientTitleInput = document.getElementById('clientTitleInput');
+        const clientImageInput = document.getElementById('clientImageInput');
+        const clientCodeInput = document.getElementById('clientCodeInput');
+        const submitClient = document.getElementById('submitClient');
+        const cancelSubmit = document.getElementById('cancelSubmit');
+        const uploadButton = document.getElementById('uploadButton');
+        const clientSubmission = document.getElementById('clientSubmission');
+
+        uploadButton.addEventListener('click', () => {
+            clientSubmission.classList.toggle('hidden');
+        });
+
+        submitClient.addEventListener('click', () => {
+            const title = clientTitleInput.value.trim();
+            const code = clientCodeInput.value.trim();
+
+            if (!title || !code) {
+                alert("Please provide both a title and client code!");
+                return;
+            }
+
+            const file = clientImageInput.files[0];
+            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imageBase64 = event.target.result;
+                    clients.push({ title, imageBase64, code });
+                    try {
+                        localStorage.setItem('clients', JSON.stringify(clients));
+                        resetForm();
+                        alert("Client submitted successfully!");
+                        loadClients();
+                    } catch (e) {
+                        alert("Failed to save client: localStorage might be full.");
+                    }
+                };
+                reader.onerror = function() {
+                    alert("Failed to read the image file!");
+                };
+                reader.readAsDataURL(file);
+            } else {
+                clients.push({ title, code });
+                localStorage.setItem('clients', JSON.stringify(clients));
+                resetForm();
+                alert("Client submitted successfully!");
+                loadClients();
+            }
+        });
+
+        cancelSubmit.addEventListener('click', () => {
+            resetForm();
+        });
+
+        // Reset form
+        function resetForm() {
+            clientTitleInput.value = '';
+            clientImageInput.value = '';
+            clientCodeInput.value = '';
+            clientSubmission.classList.add('hidden');
+            currentPage = 1;
+        }
+
+        // Load page
+        window.onload = function() {
+            updateNav();
+            checkOwner();
+            loadClients();
+
+            // Pagination
+            document.getElementById('prevPageClient').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadClients(document.getElementById('sortOptions').value);
+                }
+            });
+            document.getElementById('nextPageClient').addEventListener('click', () => {
+                const clients = JSON.parse(localStorage.getItem('clients')) || [];
+                const totalPages = Math.ceil(clients.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadClients(document.getElementById('sortOptions').value);
+                }
+            });
+
+            // Sort options
+            document.getElementById('sortOptions').addEventListener('change', (e) => {
+                currentPage = 1;
+                loadClients(e.target.value);
+            });
+        };
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-menu');
+            menu.classList.toggle('active');
         }
 
         // Dark mode toggle
@@ -382,171 +515,6 @@
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
             themeToggle.textContent = '☀️';
-        }
-
-        // Pagination state
-        let currentPage = 1;
-        const itemsPerPage = 10;
-        let allClients = [];
-
-        // Load and display clients with pagination, search, and filter
-        function loadClients(searchQuery = '', filter = 'all') {
-            const clientList = document.getElementById('clientList');
-            allClients = decryptData(localStorage.getItem('clients')) || [];
-            let filteredClients = [...allClients];
-
-            // Search
-            if (searchQuery) {
-                filteredClients = filteredClients.filter(client =>
-                    client.title.toLowerCase().includes(searchQuery.toLowerCase())
-                );
-            }
-
-            // Filter
-            if (filter === 'title-asc') {
-                filteredClients.sort((a, b) => a.title.localeCompare(b.title));
-            } else if (filter === 'title-desc') {
-                filteredClients.sort((a, b) => b.title.localeCompare(a.title));
-            }
-
-            const totalItems = filteredClients.length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-            const paginatedClients = filteredClients.slice(startIndex, endIndex);
-
-            const pageInfo = document.getElementById('pageInfo');
-            pageInfo.textContent = totalItems > 0 ? `Page ${currentPage} of ${totalPages}` : 'Page 0 of 0';
-
-            const prevButton = document.getElementById('prevPage');
-            const nextButton = document.getElementById('nextPage');
-            prevButton.disabled = currentPage === 1;
-            nextButton.disabled = currentPage === totalPages || totalPages === 0;
-
-            if (paginatedClients.length === 0) {
-                clientList.innerHTML = '<p class="text-center text-blue-200">No clients available yet.</p>';
-                return;
-            }
-
-            clientList.innerHTML = '';
-            paginatedClients.forEach((client, index) => {
-                const globalIndex = allClients.indexOf(client);
-                const card = document.createElement('div');
-                card.className = 'card fade-in';
-                card.innerHTML = `
-                    ${client.imageBase64 ? `<img src="${client.imageBase64}" class="client-image" alt="${client.title} image" loading="lazy" />` : ''}
-                    <h3 class="text-xl font-semibold text-blue-100 mb-2">${client.title}</h3>
-                    <p class="text-blue-200 mb-4">A client hack for ${client.title.toLowerCase()} with anti-ban protection.</p>
-                    <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto mb-4">${client.code}</pre>
-                    <div class="flex justify-end space-x-2">
-                        <button class="btn-primary text-white copy-client" data-index="${globalIndex}">Copy Code</button>
-                        ${isOwner ? `
-                            <button class="btn-edit text-white edit-client" data-index="${globalIndex}" onclick="window.location.href='owner-settings.html#client'">Edit</button>
-                            <button class="btn-delete text-white delete-client" data-index="${globalIndex}">Delete</button>
-                        ` : ''}
-                    </div>
-                `;
-                clientList.appendChild(card);
-            });
-
-            document.querySelectorAll('.copy-client').forEach(button => {
-                button.addEventListener('click', () => {
-                    const index = parseInt(button.getAttribute('data-index'));
-                    const client = allClients[index];
-                    navigator.clipboard.writeText(client.code).then(() => {
-                        alert('Client copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Failed to copy client: ', err);
-                    });
-                });
-            });
-
-            if (isOwner) {
-                document.querySelectorAll('.delete-client').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const index = parseInt(button.getAttribute('data-index'));
-                        if (confirm('Are you sure you want to delete this client?')) {
-                            allClients.splice(index, 1);
-                            localStorage.setItem('clients', encryptData(allClients));
-                            currentPage = 1;
-                            loadClients(searchQuery, filter);
-                        }
-                    });
-                });
-            }
-        }
-
-        // Handle search and filter
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            currentPage = 1;
-            loadClients(e.target.value, document.getElementById('filterSelect').value);
-        });
-
-        document.getElementById('filterSelect').addEventListener('change', (e) => {
-            currentPage = 1;
-            loadClients(document.getElementById('searchInput').value, e.target.value);
-        });
-
-        // Handle user uploads
-        document.getElementById('userUploadForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const title = document.getElementById('uploadTitle').value;
-            const code = document.getElementById('uploadCode').value;
-            const imageFile = document.getElementById('uploadImage').files[0];
-
-            if (!title || !code) {
-                alert('Please fill in all required fields!');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const imageBase64 = event.target.result;
-                const pendingUploads = decryptData(localStorage.getItem('pendingUploads')) || [];
-                pendingUploads.push({ title, code, imageBase64, type: 'client' });
-                localStorage.setItem('pendingUploads', encryptData(pendingUploads));
-                alert('Client submitted for review!');
-                document.getElementById('userUploadForm').reset();
-                document.getElementById('userUploadSection').classList.add('hidden');
-            };
-
-            if (imageFile) {
-                reader.readAsDataURL(imageFile);
-            } else {
-                const pendingUploads = decryptData(localStorage.getItem('pendingUploads')) || [];
-                pendingUploads.push({ title, code, type: 'client' });
-                localStorage.setItem('pendingUploads', encryptData(pendingUploads));
-                alert('Client submitted for review!');
-                document.getElementById('userUploadForm').reset();
-                document.getElementById('userUploadSection').classList.add('hidden');
-            }
-        });
-
-        window.onload = function() {
-            updateNav();
-            checkOwner();
-            loadClients();
-
-            document.getElementById('prevPage').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    loadClients(document.getElementById('searchInput').value, document.getElementById('filterSelect').value);
-                }
-            });
-
-            document.getElementById('nextPage').addEventListener('click', () => {
-                const totalPages = Math.ceil(allClients.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    loadClients(document.getElementById('searchInput').value, document.getElementById('filterSelect').value);
-                }
-            });
-        };
-
-        function toggleMenu() {
-            const menu = document.querySelector('.nav-menu');
-            menu.classList.toggle('active');
         }
     </script>
 </body>
